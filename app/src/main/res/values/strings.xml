@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PubCrawler</string>
+    <string name="title_activity_find_pub">find_pub</string>
+</resources>
