@@ -13,10 +13,6 @@ public class PubCrawler_Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pub_crawler__main);
-        getActionBar().hide();
-
-
-
     }
 
     public void findAPub(View view) {
