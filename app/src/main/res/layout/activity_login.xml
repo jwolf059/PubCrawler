@@ -7,8 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context="edu.uw.tacoma.jwolf059.pubcrawler.LoginActivity">
 
-
     <include layout="@layout/content_login" />
-
 
 </android.support.design.widget.CoordinatorLayout>

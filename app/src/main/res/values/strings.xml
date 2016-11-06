@@ -3,4 +3,7 @@
     <string name="title_activity_find_pub">find_pub</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="facebook_app_id">1125139577523442</string>
+    <string name="LOGIN_PREFS">edu.uw.tacoma.jwolf059.webserviceslab.PREFS</string>
+    <string name="LOGGEDIN">loggedin</string>
+    <string name="action_logout">Logout</string>
 </resources>

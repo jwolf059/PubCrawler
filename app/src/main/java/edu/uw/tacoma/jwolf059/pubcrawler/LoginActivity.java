@@ -1,6 +1,9 @@
 package edu.uw.tacoma.jwolf059.pubcrawler;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInstaller;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -32,10 +35,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static android.R.attr.data;
+
 public class LoginActivity extends AppCompatActivity {
 
     private final static String REGISTER_USER_URL = "http://cssgate.insttech.washington.edu/~jwolf059/register.php?";
-
+    private SharedPreferences mSharedPreferences;
     private final static String SIGNIN_URL = "http://cssgate.insttech.washington.edu/~jwolf059/authenticate.php?";
     CallbackManager callbackManager;
     private String mloginID;
@@ -47,83 +52,96 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
-
         callbackManager = CallbackManager.Factory.create();
-        setContentView(R.layout.activity_login);
-        final EditText userIdText = (EditText) findViewById(R.id.user_name);
-        final EditText pwdText = (EditText) findViewById(R.id.password);
-        loginButton = (LoginButton)findViewById(R.id.login_button);
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Intent intent = new Intent(getApplicationContext(), PubCrawler_Main.class);
-                startActivity(intent);
-                finish();
-            }
+        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        if (!mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
+            setContentView(R.layout.activity_login);
+            final EditText userIdText = (EditText) findViewById(R.id.user_name);
+            final EditText pwdText = (EditText) findViewById(R.id.password);
+            loginButton = (LoginButton) findViewById(R.id.login_button);
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException e) {
-
-            }
-        });
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    Log.i("Logged in", "Yep");
+                    mSharedPreferences
+                            .edit()
+                            .putBoolean(getString(R.string.LOGGEDIN), true)
+                            .commit();
+                    Intent intent = new Intent(getApplicationContext(), PubCrawler_Main.class);
+                    startActivity(intent);
 
 
-
-
-
-        Button signInButton = (Button) findViewById(R.id.sign_in);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mloginID = userIdText.getText().toString();
-                mPassword = pwdText.getText().toString();
-                if (TextUtils.isEmpty(mloginID)) {
-                    Toast.makeText(v.getContext(), "Enter your Email Address"
-                            , Toast.LENGTH_SHORT)
-                            .show();
-                    userIdText.requestFocus();
-                    return;
-                }
-                if (!mloginID.contains("@")) {
-                    Toast.makeText(v.getContext(), "Enter a valid email address"
-                            , Toast.LENGTH_SHORT)
-                            .show();
-                    userIdText.requestFocus();
-                    return;
+                    finish();
                 }
 
-                if (TextUtils.isEmpty(mPassword)) {
-                    Toast.makeText(v.getContext(), "Enter password"
-                            , Toast.LENGTH_SHORT)
-                            .show();
-                    pwdText.requestFocus();
-                    return;
+                @Override
+                public void onCancel() {
+
                 }
-                if (mPassword.length() < 6) {
-                    Toast.makeText(v.getContext()
-                            , "Enter password of at least 6 characters"
-                            , Toast.LENGTH_SHORT)
-                            .show();
-                    pwdText.requestFocus();
-                    return;
+
+                @Override
+                public void onError(FacebookException e) {
+
                 }
-                Log.e("UserName ", mloginID);
-                Log.e("pass ", mPassword);
-                //NEED THIS
-                String url = buildSignInURL(v);
-                Log.i("URL", url);
-                logIn(url, v);            }
-        });
+
+            });
+
+            Log.i("Past", "Facebook");
+            loginButton.clearPermissions();
+
+            Button signInButton = (Button) findViewById(R.id.sign_in);
+            signInButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mloginID = userIdText.getText().toString();
+                    mPassword = pwdText.getText().toString();
+                    if (TextUtils.isEmpty(mloginID)) {
+                        Toast.makeText(v.getContext(), "Enter your Email Address"
+                                , Toast.LENGTH_SHORT)
+                                .show();
+                        userIdText.requestFocus();
+                        return;
+                    }
+                    if (!mloginID.contains("@")) {
+                        Toast.makeText(v.getContext(), "Enter a valid email address"
+                                , Toast.LENGTH_SHORT)
+                                .show();
+                        userIdText.requestFocus();
+                        return;
+                    }
+
+                    if (TextUtils.isEmpty(mPassword)) {
+                        Toast.makeText(v.getContext(), "Enter password"
+                                , Toast.LENGTH_SHORT)
+                                .show();
+                        pwdText.requestFocus();
+                        return;
+                    }
+                    if (mPassword.length() < 6) {
+                        Toast.makeText(v.getContext()
+                                , "Enter password of at least 6 characters"
+                                , Toast.LENGTH_SHORT)
+                                .show();
+                        pwdText.requestFocus();
+                        return;
+                    }
+                    //NEED THIS
+                    String url = buildSignInURL(v);
+                    Log.i("URL", url);
+                    logIn(url, v);
+                }
+            });
+        } else {
+            Intent i = new Intent(this, PubCrawler_Main.class);
+            startActivity(i);
+            finish();
+        }
     }
 
-
     @Override
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
@@ -160,10 +178,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void logIn(String url, View v) {
         LoginTask task = new LoginTask();
-        Log.i("URL: ", url);
         task.execute(new String[]{url.toString()});
     }
-
 
     //NEED this
     private class LoginTask extends AsyncTask<String, Void, String> {
@@ -222,6 +238,10 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "You have successfully Logged In"
                             , Toast.LENGTH_LONG)
                             .show();
+                    mSharedPreferences
+                            .edit()
+                            .putBoolean(getString(R.string.LOGGEDIN), true)
+                            .commit();
                     Intent intent = new Intent(getApplicationContext(), PubCrawler_Main.class);
                     startActivity(intent);
                     finish();
@@ -241,6 +261,8 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     }
+
+
 }
 
 
