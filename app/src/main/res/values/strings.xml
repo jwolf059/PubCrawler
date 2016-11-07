@@ -6,4 +6,9 @@
     <string name="LOGIN_PREFS">edu.uw.tacoma.jwolf059.webserviceslab.PREFS</string>
     <string name="LOGGEDIN">loggedin</string>
     <string name="action_logout">Logout</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="userid_hint">Enter your userid</string>
+    <string name="pwd_hint">Enter your password</string>
+    <string name="pwdVer_hint">Re-enter your password</string>
+    <string name="register_text">REGISTER</string>
 </resources>
