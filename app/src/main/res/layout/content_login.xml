@@ -21,7 +21,8 @@
         android:id="@+id/register"
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/sign_in"
-        android:layout_alignStart="@+id/sign_in" />
+        android:layout_alignStart="@+id/sign_in"
+        android:onClick="register"/>
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"

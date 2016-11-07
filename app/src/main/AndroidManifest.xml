@@ -3,6 +3,7 @@
     package="edu.uw.tacoma.jwolf059.pubcrawler">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -10,7 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PubCrawler_Main"></activity>
+        <activity android:name=".PubCrawler_Main" />
         <activity
             android:name=".FindpubActivity"
             android:label="@string/title_activity_find_pub"
@@ -26,10 +27,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name=".RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>
