@@ -181,6 +181,11 @@ public class LoginActivity extends AppCompatActivity {
         task.execute(new String[]{url.toString()});
     }
 
+    public void register(View view) {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
     //NEED this
     private class LoginTask extends AsyncTask<String, Void, String> {
 
