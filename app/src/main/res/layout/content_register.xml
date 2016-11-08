@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="@drawable/beerflight"
+    tools:context="edu.uw.tacoma.jwolf059.pubcrawler.RegisterActivity">
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
+    <EditText
+        android:id="@+id/pwd_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="@string/pwd_hint"
+        android:ems="10"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/com_facebook_button_login_silver_background" />
+
+    <EditText
+        android:id="@+id/userid_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textWebEmailAddress"
+        android:hint="@string/userid_hint"
+        android:ems="10"
+        android:layout_above="@id/pwd_edit"
+        android:layout_alignLeft="@id/pwd_edit"
+        android:layout_alignStart="@id/pwd_edit"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/com_facebook_button_login_silver_background" />
+
+    <EditText
+        android:id="@+id/pwdVer_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="@string/pwdVer_hint"
+        android:ems="10"
+        android:layout_below="@id/pwd_edit"
+        android:layout_alignLeft="@id/pwd_edit"
+        android:layout_alignStart="@id/pwd_edit"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/com_facebook_button_login_silver_background" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/register_button"
+        android:text="@string/register_text"
+        android:layout_marginTop="28dp"
+        android:layout_below="@id/pwdVer_edit"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
+

@@ -208,6 +208,12 @@ public class LoginActivity extends AppCompatActivity {
         task.execute(new String[]{url.toString()});
     }
 
+
+    public void register(View view) {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Creates the LoginTask that executes the authetification and verifys the returned results.
      */
