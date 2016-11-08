@@ -1,14 +1,25 @@
+/*
+* CrawlActivity - PubCrawler Applicaiton
+* TCSS450 - Fall 2016
+*
+ */
 package edu.uw.tacoma.jwolf059.pubcrawler;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 
+/**
+ * The Findpub Activity will launch the map view and pub list fragments.
+ * @version 2 Nov 2016
+ * @author Jeremy Wolf
+ *
+ */
 public class FindpubActivity extends AppCompatActivity {
 
+    /**
+     * Creates the findpub Activity.
+     * @param savedInstanceState the bundle containig the savedInstance data.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
