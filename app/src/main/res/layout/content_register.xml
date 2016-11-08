@@ -12,7 +12,6 @@
     android:background="@drawable/beerflight"
     tools:context="edu.uw.tacoma.jwolf059.pubcrawler.RegisterActivity">
 
-
     <EditText
         android:id="@+id/pwd_edit"
         android:layout_width="wrap_content"
