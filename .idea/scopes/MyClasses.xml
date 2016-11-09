@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="MyClasses" pattern="src[app]:edu.uw.tacoma.jwolf059.pubcrawler.RegisterActivity" />
+</component>
