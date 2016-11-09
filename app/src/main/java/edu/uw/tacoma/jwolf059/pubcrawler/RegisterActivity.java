@@ -1,3 +1,8 @@
+/*
+ * TCSS450 A - Autumn 2016
+ * Team 5
+ * Project Phase 1
+ */
 package edu.uw.tacoma.jwolf059.pubcrawler;
 
 import android.content.Context;
@@ -25,14 +30,28 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
+/**
+ * An Activity to register new users.
+ *
+ */
 public class RegisterActivity extends AppCompatActivity {
 
-    private final static String REGISTER_USER_URL = "http://cssgate.insttech.washington.edu/~jwolf059/register.php?";
-
+    private final static String REGISTER_USER_URL =
+            "http://cssgate.insttech.washington.edu/~jwolf059/register.php?";
+    /** To keep user logged in when they use the app the next time. */
     private SharedPreferences mSharedPreferences;
+    /** User's login ID. Is used to build the register request url. */
     private String mLoginID;
+    /** User's login password. Is used to build the register request url. */
     private String mPassword;
 
+
+    /**
+     * Creates view for the Register Activity
+     * and implements the action listener for the Register button.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,14 +59,10 @@ public class RegisterActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        // Hide the floating action button
+        FloatingActionButton floatingActionButton = (FloatingActionButton)
+                findViewById(R.id.fab);
+        floatingActionButton.hide();
 
         final EditText userIDText = (EditText) findViewById(R.id.userid_edit);
         final EditText pwdText = (EditText) findViewById(R.id.pwd_edit);
@@ -101,8 +116,9 @@ public class RegisterActivity extends AppCompatActivity {
                     pwdText.requestFocus();
                     return;
                 }
-
+                // Build the register request url
                 String url = buildRegisterURL(v);
+                // Launch the AsyncTask to run the register process in background
                 new RegisterTask().execute(new String[]{url});
             }
         });
@@ -120,18 +136,14 @@ public class RegisterActivity extends AppCompatActivity {
         StringBuilder sb = new StringBuilder(REGISTER_USER_URL);
 
         try {
-
             sb.append("id='");
             sb.append(mLoginID.toLowerCase());
             sb.append("'");
-
-
 
             String pass = mPassword;
             sb.append("&pass='");
             sb.append(mPassword);
             sb.append("'");
-
         }
         catch(Exception e) {
             Toast.makeText(v.getContext(), "Something wrong with the url" + e.getMessage(), Toast.LENGTH_LONG)
@@ -215,7 +227,6 @@ public class RegisterActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), PubCrawler_Main.class);
                     startActivity(intent);
                     finish();
-
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Unable to register: "
