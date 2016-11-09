@@ -44,12 +44,17 @@ import java.net.URL;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    private final static String REGISTER_USER_URL = "http://cssgate.insttech.washington.edu/~jwolf059/register.php?";
+    /** String containing the URL to the authenticate.php code */
     private final static String SIGNIN_URL = "http://cssgate.insttech.washington.edu/~jwolf059/authenticate.php?";
+    /** Contains the SharedPreference object */
     private SharedPreferences mSharedPreferences;
+    /** Facebook Callback manager*/
     CallbackManager callbackManager;
+    /** String containing the LoginId */
     private String mloginID;
+    /** String containing the password */
     private String mPassword;
+    /** Facebook login button*/
     private LoginButton loginButton;
 
 
