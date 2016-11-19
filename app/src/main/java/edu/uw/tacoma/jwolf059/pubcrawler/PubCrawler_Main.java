@@ -38,7 +38,7 @@ public class PubCrawler_Main extends AppCompatActivity {
     }
 
     public void findAPub(View view) {
-        Intent intent = new Intent(this, FindpubActivity.class);
+        Intent intent = new Intent(this, PubLocateActivity.class);
         startActivity(intent);
 
     }
