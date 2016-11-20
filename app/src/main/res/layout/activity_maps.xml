@@ -5,8 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="edu.uw.tacoma.jwolf059.pubcrawler.PubDetails"
-    android:background="@color/colorPrimaryDark">
+    android:background="@drawable/amber">
 
+
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp">
 
 
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,5 +25,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="edu.uw.tacoma.jwolf059.maptester.MapsActivity" />
+</FrameLayout>
 
 </FrameLayout>

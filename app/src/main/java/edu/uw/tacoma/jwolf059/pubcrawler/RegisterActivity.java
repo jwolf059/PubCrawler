@@ -1,8 +1,8 @@
 /*
- * TCSS450 A - Autumn 2016
- * Team 5
- * Project Phase 1
- */
+* CrawlActivity - PubCrawler Applicaiton
+* TCSS450 - Fall 2016
+*
+*/
 package edu.uw.tacoma.jwolf059.pubcrawler;
 
 import android.content.Context;
@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -33,17 +32,20 @@ import java.net.URL;
 
 /**
  * An Activity to register new users.
+ * @version 6 November 2016
+ * @author Thang
  *
  */
 public class RegisterActivity extends AppCompatActivity {
 
+    /** URL used to contect to the User Database */
     private final static String REGISTER_USER_URL =
             "http://cssgate.insttech.washington.edu/~jwolf059/register.php?";
-    /** To keep user logged in when they use the app the next time. */
+    //To keep user logged in when they use the app the next time.
     private SharedPreferences mSharedPreferences;
-    /** User's login ID. Is used to build the register request url. */
+    //User's login ID. Is used to build the register request url.
     private String mLoginID;
-    /** User's login password. Is used to build the register request url. */
+    // User's login password. Is used to build the register request url.
     private String mPassword;
 
 

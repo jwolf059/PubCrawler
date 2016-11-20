@@ -45,16 +45,16 @@ import java.net.URL;
 public class LoginActivity extends AppCompatActivity {
 
     /** String containing the URL to the authenticate.php code */
-    private final static String SIGNIN_URL = "http://cssgate.insttech.washington.edu/~jwolf059/authenticate.php?";
-    /** Contains the SharedPreference object */
+    public final static String SIGNIN_URL = "http://cssgate.insttech.washington.edu/~jwolf059/authenticate.php?";
+    // Contains the SharedPreference object
     private SharedPreferences mSharedPreferences;
-    /** Facebook Callback manager*/
+    // Facebook Callback manager
     CallbackManager callbackManager;
-    /** String containing the LoginId */
+    //String containing the LoginId
     private String mloginID;
-    /** String containing the password */
+    // String containing the password
     private String mPassword;
-    /** Facebook login button*/
+    // Facebook login button
     private LoginButton loginButton;
 
 
@@ -104,8 +104,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
             });
-
-            //loginButton.clearPermissions();
 
 
             //Creates the custom signinButton
@@ -213,7 +211,10 @@ public class LoginActivity extends AppCompatActivity {
         task.execute(new String[]{url.toString()});
     }
 
-
+    /**
+     * Takes the user to the Register Activity.
+     * @param view the current view..
+     */
     public void register(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);

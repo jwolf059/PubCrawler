@@ -1,3 +1,9 @@
+/*
+* CrawlActivity - PubCrawler Applicaiton
+* TCSS450 - Fall 2016
+*
+*/
+
 package edu.uw.tacoma.jwolf059.pubcrawler;
 
 
@@ -24,8 +30,13 @@ import java.net.URL;
  * A simple {@link Fragment} subclass.
  */
 public class PubDetails extends AppCompatActivity {
+
+    /** URL Part 1 requires placeid to be added to the end of the string */
     public static final String URL_1 = "https://maps.googleapis.com/maps/api/place/details/json?placeid=";
+    /** URL Part 2 is added after the placeid */
     public static final String URL_2 = "&key=AIzaSyDP4Q0VG5hW4pg4b77WEdG0_wZcZu0udS4";
+
+    //Thang these variables are just for testing do what you want with them.
     public static TextView mTitle;
     public static TextView mID;
     public static TextView mRating;
@@ -38,6 +49,9 @@ public class PubDetails extends AppCompatActivity {
     public static TextView mHasFood;
 
 
+    /**
+     * Constructor for the PubDetail Activity.
+     */
     public PubDetails() {
         // Required empty public constructor
     }
@@ -48,9 +62,9 @@ public class PubDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pub_details);
 
-        String url = buildDetailsURL();
 
-
+        // This is an example of how the Name, ID, Rating, and IsOpen data can be accessed.
+        // It is being passed through the Activtiy Extras. Format and make changes as you see fit.
         mTitle = (TextView) findViewById(R.id.test);
         mTitle.setText(getIntent().getStringExtra("Name"));
         mID = (TextView) findViewById(R.id.test2);
@@ -73,11 +87,16 @@ public class PubDetails extends AppCompatActivity {
         mPhone = (TextView) findViewById(R.id.test9);
         mHasFood = (TextView) findViewById(R.id.test10);
 
+        String url = buildDetailsURL();
         DetailTask detail = new DetailTask();
         detail.execute(new String[]{url});
 
     }
 
+    /**
+     * Builds the URL using the Place ID. The URL will allow access to details for the given place.
+     * @return A URL that includes the Place ID, Webaddress, and Key.
+     */
     public String buildDetailsURL() {
         StringBuilder sb = new StringBuilder();
         sb.append(URL_1);
@@ -88,7 +107,9 @@ public class PubDetails extends AppCompatActivity {
 
     }
 
-
+    /**
+     * Creates the DetiaTask that executes the Details infomation gathering.
+     */
     private class DetailTask extends AsyncTask<String, Void, String> {
 
 
@@ -143,51 +164,68 @@ public class PubDetails extends AppCompatActivity {
             try {
 
                 JSONObject jsonObject = new JSONObject(result);
-                JSONObject bar = jsonObject.getJSONObject("result");
+                detailsJSONParse(jsonObject);
+
+
+            } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(), "Detailed data inaccessible at this time" +
+                        e.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("onPostExecuteDeatils: ", e.getMessage());
+            }
+
+        }
+
+        /**
+         * Parses the JSON object to extract detailed information about the Place. Extracts the
+         * Website, photoreference, address, phone number, hasFood, and the Hours of operation
+         * (when avaiable).
+         * @param theObject the JSON object for this specific Place.
+         */
+        public void detailsJSONParse(JSONObject theObject) {
+
+            String schedule = "";
+
+            try {
+
+
+                JSONObject bar = theObject.getJSONObject("result");
                 String address = bar.getString("formatted_address");
                 String phone = bar.getString("formatted_phone_number");
                 String website = bar.getString("website");
-
-                String schedule = "";
-
-
-                try {
-                    JSONObject hours = bar.getJSONObject("opening_hours");
-                    schedule = hours.getString("weekday_text");
-
-                } catch (JSONException e) {
-                    Log.i("parseDetailJSON: ", e.getMessage());
-                    schedule = "Hours not avaiable";
-                }
-
-
-                JSONArray types = bar.getJSONArray("types");
-                String hasFood = "No";
-                for (int i = 0; i < types.length(); i++) {
-                    if (((String)types.get(i)).equals("food") || ((String)types.get(i)).equals("food")) {
-                        hasFood = "Yes";
-                        break;
-                    }
-                }
-
                 JSONArray photos = bar.getJSONArray("photos");
                 JSONObject pic = photos.getJSONObject(0);
                 String photoReference = pic.getString("photo_reference");
 
 
-                mHours.setText(schedule);
+                // Determines if the Pub has food available.
+                JSONArray types = bar.getJSONArray("types");
+                String hasFood = "No";
+                for (int i = 0; i < types.length(); i++) {
+                    if (((String) types.get(i)).equals("food") || ((String) types.get(i)).equals("food")) {
+                        hasFood = "Yes";
+                        break;
+                    }
+                }
+                // Displays the information.
                 mWebsite.setText(website);
                 mImage.setText(photoReference);
                 mAddress.setText(address);
                 mPhone.setText(phone);
                 mHasFood.setText(hasFood);
 
+                // Sometimes this object does not exist so the the exception will be caught.
+                JSONObject hours = bar.getJSONObject("opening_hours");
+                schedule = hours.getString("weekday_text");
+
+
             } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Something wrong with the detailed data" +
+                Toast.makeText(getApplicationContext(), "Detailed data inaccessible at this time" +
                         e.getMessage(), Toast.LENGTH_LONG).show();
-                Log.e("Wrong Detail Data", e.getMessage());
+                Log.i("detailsJSONParse: ", e.getMessage());
+                schedule = "Hours not avaiable";
             }
 
+            mHours.setText(schedule);
         }
     }
 

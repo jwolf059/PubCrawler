@@ -41,10 +41,16 @@ import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
  *
  */
 public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
-    public static final String URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=47.253361,-122.439191&keyword=brewery&name=bar&type=pub&radius=10000&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
+
+    /** URl used to gather pub locaitons. The locaiton must be added to the end of the string */
+    public static final String URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
+    /** Second half of the URL added after the location. */
+    public static final String URL_2 = "&keyword=brewery&name=bar&type=pub&radius=10000&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
+    // the GoogleMap oject used for displaying locaiton and pubs.
     private GoogleMap mMap;
+    // ArrayList of Pub object created using returned JSON Object.
     private ArrayList<Pub> mPubList;
-    private SupportMapFragment mapFragment;
+    // Map used to store the Marker Object and the Index of the referenced pub object.
     private HashMap<Marker, Integer> mPubMarkerMap = new HashMap<>();
 
 
@@ -56,36 +62,71 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        LoginTask task = new LoginTask();
-        task.execute(new String[]{URL.toString()});
+        String url = buildPubSearchURL();
+        PubSearchTask task = new PubSearchTask();
+        task.execute(new String[]{url});
 
     }
+
+    /**
+     * {@inheritDoc}
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng tacoma = new LatLng(47.253361, -122.439191);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(tacoma));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(tacoma, 11f));
+        // Add a marker in Tacoma, and move the camera.
+        // Ken this is the hard coded location that we need to update using the device locaiton.
+        LatLng currentLocaiton = new LatLng(47.253361, -122.439191);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocaiton));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocaiton, 11f));
         mMap.setOnInfoWindowClickListener(this);
 
     }
 
-
+    /**
+     * Takes all pubs in the mPubList and creates markers on the map. When the marker is created
+     * it is added to the mPubMarkerMap where the marker becomes the key and the index value of the
+     * pub is added as the value.
+     */
     public void addMarkers() {
         for (int i = 0; i < mPubList.size(); i++) {
             Pub pub = mPubList.get(i);
-            LatLng location = new LatLng(pub.getmLat(), pub.getmlng());
+            //Creates a LatLng object with the pubs locaiton.
+            LatLng location = new LatLng(pub.getmLat(), pub.getmLng());
             Marker mark = mMap.addMarker(new MarkerOptions().position(location).title(pub.getmName()));
+            //Add the new Marker and the Pubs index value to the HashMap.
             mPubMarkerMap.put(mark, i);
 
         }
     }
 
+    /**
+     * Creates the Pub Seach URL to be sent to the Google Place server that will return a JSON object
+     * of all pubs within a 10 kilometer radius.
+     * @return String that contains the URL to include current locaiton.
+     */
+    public String buildPubSearchURL() {
+        // Ken, Need to be able to get the Longitute and Latitude from a member variable.
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(URL);
+        //This will be the actaul device locaiton
+        sb.append("47.253361,-122.439191");
+        sb.append(URL_2);
+
+        return sb.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     * Also adds detail information to the Activity's Extras and starts the PubDetails Activity.
+     * @param marker
+     */
     @Override
     public void onInfoWindowClick(Marker marker) {
 
@@ -101,8 +142,10 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         startActivity(detail);
     }
 
-    //NEED this
-    private class LoginTask extends AsyncTask<String, Void, String> {
+    /**
+     * Creates the PubSearchTask that executes the Pub Search.
+     */
+    private class PubSearchTask extends AsyncTask<String, Void, String> {
 
 
         @Override
@@ -152,11 +195,9 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
             Log.i("json result ", result);
 
             try {
-                Log.i("In post execute", "Boom");
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jArray = jsonObject.getJSONArray("results");
                 int len = jArray.length();
-                Log.i("JSON Array Contents: ", "Length: " + len + " " + jArray.toString());
 
                 mPubList = Pub.parsePubJSON(jArray);
                 addMarkers();
