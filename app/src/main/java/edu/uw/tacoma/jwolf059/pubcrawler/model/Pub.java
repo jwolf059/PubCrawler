@@ -15,21 +15,18 @@ import java.util.ArrayList;
 
 public class Pub implements Serializable {
 
-    private String mName;
-    private double mLat;
-    private double mlng;
-    private double mRating;
-    private String mPlaceID;
-
-    private boolean isOpen;
-
-
     public static final String NAME = "name";
     public static final String LAT = "lat";
     public static final String LONG = "lng";
     public static final String PLACE_ID = "place_id";
     public static final String RATING = "rating";
     public static final String OPEN_OR_CLOSE = "open_now";
+    private String mName;
+    private double mLat;
+    private double mlng;
+    private double mRating;
+    private String mPlaceID;
+    private boolean isOpen;
 
 
     public Pub(String theName, double theLat, double theLong, double theRating, String theID, boolean theOpen) {
@@ -44,10 +41,6 @@ public class Pub implements Serializable {
 
 
 
-    }
-
-    public interface OnClickPubListner {
-        void onListFragmentInteraction(Pub pub);
     }
 
     /**
@@ -105,17 +98,25 @@ public class Pub implements Serializable {
     public double getmLat() {
         return mLat;
     }
+
     public double getmlng() {
         return mlng;
     }
+
     public String getmPlaceID() {
         return mPlaceID;
     }
+
     public boolean getIsOpen() {
         return isOpen;
     }
+
     public Double getmRating() {
         return mRating;
+    }
+
+    public interface OnClickPubListner {
+        void onListFragmentInteraction(Pub pub);
     }
 
 }
