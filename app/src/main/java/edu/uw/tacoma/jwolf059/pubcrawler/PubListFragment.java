@@ -36,9 +36,15 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 public class PubListFragment extends Fragment {
 
+<<<<<<< HEAD
     public static final String URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
             "json?location=47.253361,-122.439191&keyword=brewery&name=bar&type=pub&radius=10000" +
             "&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
+=======
+    public static final String URL = "https://maps.googleapis.com/maps/api/place/nearbysearch" +
+            "/json?location=47.253361,-122.439191&keyword=brewery&name=bar&type=pub&radius" +
+            "=10000&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
+>>>>>>> origin/master
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
