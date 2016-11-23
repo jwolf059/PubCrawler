@@ -139,7 +139,6 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
             Marker mark = mMap.addMarker(new MarkerOptions().position(location).title(pub.getmName()));
             //Add the new Marker and the Pubs index value to the HashMap.
             mPubMarkerMap.put(mark, i);
-
         }
     }
 

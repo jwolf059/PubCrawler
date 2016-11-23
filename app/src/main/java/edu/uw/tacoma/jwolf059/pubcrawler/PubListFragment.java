@@ -36,9 +36,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 public class PubListFragment extends Fragment {
 
-    public static final String URL = "https://maps.googleapis.com/maps/api/place/nearbysearch" +
-            "/json?location=47.253361,-122.439191&keyword=brewery&name=bar&type=pub&radius" +
-            "=10000&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
+    public static final String URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
+            "json?location=47.253361,-122.439191&keyword=brewery&name=bar&type=pub&radius=10000" +
+            "&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
@@ -159,7 +159,6 @@ public class PubListFragment extends Fragment {
                 }
             }
             Log.i("json result ", response);
-//            System.out.println(response);
             return response;
         }
 
@@ -173,9 +172,6 @@ public class PubListFragment extends Fragment {
          */
         @Override
         protected void onPostExecute(String result) {
-            System.out.println("***THANG***");
-            System.out.println(result);
-            System.out.println("***THANG***");
 
 
             try {
@@ -200,7 +196,6 @@ public class PubListFragment extends Fragment {
             }
 
             Log.i("json result ", result);
-            System.out.println(result);
 
         }
     }
