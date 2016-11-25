@@ -7,9 +7,11 @@
 package edu.uw.tacoma.jwolf059.pubcrawler.model;
 
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -34,6 +36,10 @@ public class Pub implements Serializable {
     private String mPlaceID;
     //Contains if the pub is open
     private boolean isOpen;
+    //Contains the Address;
+    private String mAddress;
+    //Contains if the Pub serves food;
+    private String mHasFood;
 
     /** String Constant for JSON key name */
     public static final String NAME = "name";
@@ -47,9 +53,11 @@ public class Pub implements Serializable {
     public static final String RATING = "rating";
     /** String Constant for JSON key is open now */
     public static final String OPEN_OR_CLOSE = "open_now";
+    /** String Constant for JSON key address */
+    public static final String ADDRESS = "vicinity";
 
 
-    public Pub(String theName, double theLat, double theLong, double theRating, String theID, boolean theOpen) {
+    public Pub(String theName, double theLat, double theLong, double theRating, String theID, boolean theOpen, String theAddress, String theHasFood) {
 
 
         mName = theName;
@@ -58,6 +66,8 @@ public class Pub implements Serializable {
         mRating = theRating;
         mPlaceID = theID;
         isOpen = theOpen;
+        mAddress = theAddress;
+        mHasFood = theHasFood;
 
 
 
@@ -92,6 +102,7 @@ public class Pub implements Serializable {
                     String name = obj.getString(Pub.NAME);
                     String id = obj.getString(Pub.PLACE_ID);
                     double rate = obj.getDouble(Pub.RATING);
+                    String address = obj.getString(Pub.ADDRESS);
 
                     double lat = location.getDouble(Pub.LAT);
                     double lng = location.getDouble(Pub.LONG);
@@ -106,7 +117,17 @@ public class Pub implements Serializable {
 
                     }
 
-                    Pub pb = new Pub(name, lat, lng, rate, id, open);
+                    // Determines if the Pub has food available.
+                    JSONArray types = obj.getJSONArray("types");
+                    String hasFood = "No";
+                    for (int k = 0; i < types.length(); i++) {
+                        if (((String) types.get(i)).equals("food") || ((String) types.get(i)).equals("food")) {
+                            hasFood = "Yes";
+                            break;
+                        }
+                    }
+
+                    Pub pb = new Pub(name, lat, lng, rate, id, open, address, hasFood);
                     pubList.add(pb);
                 }
 
@@ -171,5 +192,25 @@ public class Pub implements Serializable {
 
         return mRating;
     }
+
+    /**
+     * Getter method for the mAddress Field.
+     * @return address for the Pub.
+     */
+    public String getmAddress() {
+
+        return mAddress;
+    }
+
+    /**
+     * Getter method for the mHasFood Field.
+     * @return if the Pub has food.
+     */
+    public String gmHasFood() {
+
+        return mHasFood;
+    }
+
+
 
 }
