@@ -105,6 +105,8 @@ public class LoginActivity extends AppCompatActivity {
 
             });
 
+            //loginButton.clearPermissions();
+
 
             //Creates the custom signinButton
             Button signInButton = (Button) findViewById(R.id.sign_in);
