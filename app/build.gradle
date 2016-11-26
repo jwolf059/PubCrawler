@@ -20,6 +20,8 @@ android {
 }
 repositories {
     mavenCentral()
+    jcenter()
+    maven { url '<your-SDK-path>/extras/android/m2repository' }
 }
 
 dependencies {
@@ -33,5 +35,8 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.8.0'
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:support-annotations:24.2.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:support-annotations:24.2.0'
 }
