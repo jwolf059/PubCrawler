@@ -6,10 +6,13 @@
 package edu.uw.tacoma.jwolf059.pubcrawler;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,7 +44,7 @@ import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
  * @author Jeremy Wolf
  *
  */
-public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, PubListFragment.OnListFragmentInteractionListener {
+public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     /** URl used to gather pub locaitons. The locaiton must be added to the end of the string */
     public static final String URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
@@ -200,8 +203,8 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         mPubList = (ArrayList<Pub>) thePubList;
     }
 
-    @Override
-    public void onListFragmentInteraction(Pub item) {
+//    @Override
+//    public void onListFragmentInteraction(Pub item) {
 //        // Capture the course fragment from the activity layout
 //        CourseDetailFragment courseDetailFragment = (CourseDetailFragment)
 //                getSupportFragmentManager().findFragmentById(R.id.course_detail_frag);
@@ -224,7 +227,7 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
 //                    .addToBackStack(null)
 //                    .commit();
 //        }
-    }
+//    }
 
         @Override
         protected String doInBackground(String... urls) {

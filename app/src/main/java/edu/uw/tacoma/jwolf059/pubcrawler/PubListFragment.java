@@ -36,15 +36,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 public class PubListFragment extends Fragment {
 
-<<<<<<< HEAD
-    public static final String URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
-            "json?location=47.253361,-122.439191&keyword=brewery&name=bar&type=pub&radius=10000" +
-            "&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
-=======
     public static final String URL = "https://maps.googleapis.com/maps/api/place/nearbysearch" +
             "/json?location=47.253361,-122.439191&keyword=brewery&name=bar&type=pub&radius" +
             "=10000&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
->>>>>>> origin/master
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
@@ -59,7 +53,7 @@ public class PubListFragment extends Fragment {
     public PubListFragment() {
     }
 
-    @SuppressWarnings("unused")
+
     public static PubListFragment newInstance(int columnCount) {
         PubListFragment fragment = new PubListFragment();
         Bundle args = new Bundle();
@@ -120,7 +114,6 @@ public class PubListFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
@@ -188,7 +181,7 @@ public class PubListFragment extends Fragment {
                 Log.i("JSON Array Contents: ", "Length: " + len + " " + jArray.toString());
 
                 mPubList = Pub.parsePubJSON(jArray);
-                ((PubLocateActivity) getActivity()).setmPubList(mPubList);
+ //               ((PubLocateActivity) getActivity()).setmPubList(mPubList);
 //                ((PubLocateActivity)getActivity()).addMarkers();
                 mRecyclerView.setAdapter(new MyPubRecyclerViewAdapter(mPubList, mListener));
 
