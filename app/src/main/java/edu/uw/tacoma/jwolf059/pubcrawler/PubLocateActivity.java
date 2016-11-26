@@ -6,13 +6,13 @@
 package edu.uw.tacoma.jwolf059.pubcrawler;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -136,7 +136,7 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocaiton));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocaiton, 11f));
         mMap.setOnInfoWindowClickListener(this);
-        addMarkers();
+
     }
 
     /**
@@ -192,8 +192,10 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         startActivity(detail);
     }
 
-    //NEED this
-    private class LoginTask extends AsyncTask<String, Void, String> {
+    /**
+     * Creates the PubSearchTask that executes the Pub Search.
+     */
+    private class PubSearchTask extends AsyncTask<String, Void, String> {
 
     public List<Pub> getmPubList() {
         return mPubList;
@@ -228,6 +230,39 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
 //                    .commit();
 //        }
 //    }
+    public List<Pub> getmPubList() {
+        return mPubList;
+    }
+
+    public void setmPubList(List thePubList) {
+        mPubList = (ArrayList<Pub>) thePubList;
+    }
+
+    @Override
+    public void onListFragmentInteraction(Pub item) {
+//        // Capture the course fragment from the activity layout
+//        CourseDetailFragment courseDetailFragment = (CourseDetailFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.course_detail_frag);
+//        if (courseDetailFragment != null) {
+//            // If courseDetail frag is available, we're in two-pane layout...
+//            // Call a method in the course detail fragment to update its content
+//            courseDetailFragment.updateView(item);
+//        } else {
+//            // If the frag is not available, we're in the one-pane layout and must swap frags...
+//            // Create fragment and give it an argument for the selected student
+//            // Replace whatever is in the fragment_container view with this fragment,
+//            // and add the transaction to the back stack so the user can navigate back
+//            courseDetailFragment = new CourseDetailFragment();
+//            Bundle args = new Bundle();
+//            args.putSerializable(CourseDetailFragment.COURSE_ITEM_SELECTED, item);
+//            courseDetailFragment.setArguments(args);
+//
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.fragment_container, courseDetailFragment)
+//                    .addToBackStack(null)
+//                    .commit();
+//        }
+    }
 
         @Override
         protected String doInBackground(String... urls) {

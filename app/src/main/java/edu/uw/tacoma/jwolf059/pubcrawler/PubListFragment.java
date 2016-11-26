@@ -53,7 +53,7 @@ public class PubListFragment extends Fragment {
     public PubListFragment() {
     }
 
-
+    @SuppressWarnings("unused")
     public static PubListFragment newInstance(int columnCount) {
         PubListFragment fragment = new PubListFragment();
         Bundle args = new Bundle();
@@ -181,6 +181,7 @@ public class PubListFragment extends Fragment {
                 Log.i("JSON Array Contents: ", "Length: " + len + " " + jArray.toString());
 
                 mPubList = Pub.parsePubJSON(jArray);
+                //((PubLocateActivity) getActivity()).setmPubList(mPubList);
  //               ((PubLocateActivity) getActivity()).setmPubList(mPubList);
 //                ((PubLocateActivity)getActivity()).addMarkers();
                 mRecyclerView.setAdapter(new MyPubRecyclerViewAdapter(mPubList, mListener));
