@@ -6,13 +6,16 @@
 package edu.uw.tacoma.jwolf059.pubcrawler;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -238,8 +241,8 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         mPubList = (ArrayList<Pub>) thePubList;
     }
 
-    @Override
-    public void onListFragmentInteraction(Pub item) {
+//    @Override
+//    public void onListFragmentInteraction(Pub item) {
 //        // Capture the course fragment from the activity layout
 //        CourseDetailFragment courseDetailFragment = (CourseDetailFragment)
 //                getSupportFragmentManager().findFragmentById(R.id.course_detail_frag);
@@ -262,7 +265,7 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
 //                    .addToBackStack(null)
 //                    .commit();
 //        }
-    }
+//    }
 
         @Override
         protected String doInBackground(String... urls) {
