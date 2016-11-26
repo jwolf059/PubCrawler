@@ -4,11 +4,14 @@
 *
  */
 package edu.uw.tacoma.jwolf059.pubcrawler;
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,6 +33,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
@@ -61,13 +65,60 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        String url = buildPubSearchURL();
-        PubSearchTask task = new PubSearchTask();
-        task.execute(new String[]{url});
+        setContentView(R.layout.activity_pub_locator);
+//        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
+//        DownLoadPubsTask task = new DownLoadPubsTask();
+//        task.execute(new String[]{URL.toString()});
+
+        if ((findViewById(R.id.fragment_container_locator) != null) && (savedInstanceState == null || getSupportFragmentManager().findFragmentById(R.id.list) == null)) {
+            PubListFragment listFragment = new PubListFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container_locator, listFragment, "LIST_FRAGMENT")
+                    .commit();
+        }
+
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_map);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PubListFragment listFragment = (PubListFragment) getSupportFragmentManager()
+                        .findFragmentByTag("LIST_FRAGMENT");
+                if (listFragment != null && listFragment.isVisible()) {
+                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                            .findFragmentByTag("MAP_FRAGMENT");
+                    if (mapFragment == null) {
+                        mapFragment = new SupportMapFragment();
+                    }
+                    mapFragment.getMapAsync(PubLocateActivity.this);
+                    getSupportFragmentManager().beginTransaction()
+//                            .setCustomAnimations(
+//                                    R.animator.card_flip_right_in,
+//                                    R.animator.card_flip_right_out,
+//                                    R.animator.card_flip_left_in,
+//                                    R.animator.card_flip_left_out)
+                            .replace(R.id.fragment_container_locator, mapFragment, "MAP_FRAGMENT")
+                            .addToBackStack(null)
+                            .commit();
+                    fab.setImageResource(R.drawable.ic_view_list_black_24dp);
+                } else {
+//                    onBackPressed();
+                    listFragment = new PubListFragment();
+                    getSupportFragmentManager().beginTransaction()
+//                            .setCustomAnimations(
+//                                    R.animator.card_flip_right_in,
+//                                    R.animator.card_flip_right_out,
+//                                    R.animator.card_flip_left_in,
+//                                    R.animator.card_flip_left_out)
+                            .replace(R.id.fragment_container_locator, listFragment, "LIST_FRAGMENT")
+                            .addToBackStack(null)
+                            .commit();
+                    fab.setImageResource(R.drawable.ic_map_black_24dp);
+                }
+
+            }
+        });
 
     }
 
@@ -85,7 +136,7 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocaiton));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocaiton, 11f));
         mMap.setOnInfoWindowClickListener(this);
-
+        addMarkers();
     }
 
     /**
@@ -101,7 +152,6 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
             Marker mark = mMap.addMarker(new MarkerOptions().position(location).title(pub.getmName()));
             //Add the new Marker and the Pubs index value to the HashMap.
             mPubMarkerMap.put(mark, i);
-
         }
     }
 
@@ -142,16 +192,42 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         startActivity(detail);
     }
 
-    /**
-     * Creates the PubSearchTask that executes the Pub Search.
-     */
-    private class PubSearchTask extends AsyncTask<String, Void, String> {
+    //NEED this
+    private class LoginTask extends AsyncTask<String, Void, String> {
 
+    public List<Pub> getmPubList() {
+        return mPubList;
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
+    public void setmPubList(List thePubList) {
+        mPubList = (ArrayList<Pub>) thePubList;
+    }
+
+//    @Override
+//    public void onListFragmentInteraction(Pub item) {
+//        // Capture the course fragment from the activity layout
+//        CourseDetailFragment courseDetailFragment = (CourseDetailFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.course_detail_frag);
+//        if (courseDetailFragment != null) {
+//            // If courseDetail frag is available, we're in two-pane layout...
+//            // Call a method in the course detail fragment to update its content
+//            courseDetailFragment.updateView(item);
+//        } else {
+//            // If the frag is not available, we're in the one-pane layout and must swap frags...
+//            // Create fragment and give it an argument for the selected student
+//            // Replace whatever is in the fragment_container view with this fragment,
+//            // and add the transaction to the back stack so the user can navigate back
+//            courseDetailFragment = new CourseDetailFragment();
+//            Bundle args = new Bundle();
+//            args.putSerializable(CourseDetailFragment.COURSE_ITEM_SELECTED, item);
+//            courseDetailFragment.setArguments(args);
+//
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.fragment_container, courseDetailFragment)
+//                    .addToBackStack(null)
+//                    .commit();
+//        }
+//    }
 
         @Override
         protected String doInBackground(String... urls) {
@@ -195,9 +271,11 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
             Log.i("json result ", result);
 
             try {
+                Log.i("In post execute", "Boom");
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jArray = jsonObject.getJSONArray("results");
                 int len = jArray.length();
+                Log.i("JSON Array Contents: ", "Length: " + len + " " + jArray.toString());
 
                 mPubList = Pub.parsePubJSON(jArray);
                 addMarkers();
