@@ -22,4 +22,19 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="PubName">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!--<style name="Open">-->
+    <!--<item name="android:textColor">@android:color/holo_green_light</item>-->
+    <!--<item name="text">Open</item>-->
+    <!--</style>-->
+
+    <!--<style name="Closed">-->
+    <!--<item name="android:textColor">@android:color/holo_red_light</item>-->
+    <!--<item name="text">Closed</item>-->
+    <!--</style>-->
+    <!---->
 </resources>
