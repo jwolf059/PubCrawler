@@ -5,16 +5,10 @@
  */
 package edu.uw.tacoma.jwolf059.pubcrawler;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,6 +43,10 @@ import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
  */
 public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
+    public static final String URL_0 = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
+            "json?location=47.253361,-122.439191&keyword=brewery&name=bar&type=pub&radius=10000" +
+            "&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
+
     /** URl used to gather pub locaitons. The locaiton must be added to the end of the string */
     public static final String URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
     /** Second half of the URL added after the location. */
@@ -69,60 +67,16 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pub_locator);
-//        mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
-//        DownLoadPubsTask task = new DownLoadPubsTask();
-//        task.execute(new String[]{URL.toString()});
 
-        if ((findViewById(R.id.fragment_container_locator) != null) && (savedInstanceState == null || getSupportFragmentManager().findFragmentById(R.id.list) == null)) {
-            PubListFragment listFragment = new PubListFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container_locator, listFragment, "LIST_FRAGMENT")
-                    .commit();
-        }
-
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_map);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PubListFragment listFragment = (PubListFragment) getSupportFragmentManager()
-                        .findFragmentByTag("LIST_FRAGMENT");
-                if (listFragment != null && listFragment.isVisible()) {
-                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                            .findFragmentByTag("MAP_FRAGMENT");
-                    if (mapFragment == null) {
-                        mapFragment = new SupportMapFragment();
-                    }
-                    mapFragment.getMapAsync(PubLocateActivity.this);
-                    getSupportFragmentManager().beginTransaction()
-//                            .setCustomAnimations(
-//                                    R.animator.card_flip_right_in,
-//                                    R.animator.card_flip_right_out,
-//                                    R.animator.card_flip_left_in,
-//                                    R.animator.card_flip_left_out)
-                            .replace(R.id.fragment_container_locator, mapFragment, "MAP_FRAGMENT")
-                            .addToBackStack(null)
-                            .commit();
-                    fab.setImageResource(R.drawable.ic_view_list_black_24dp);
-                } else {
-//                    onBackPressed();
-                    listFragment = new PubListFragment();
-                    getSupportFragmentManager().beginTransaction()
-//                            .setCustomAnimations(
-//                                    R.animator.card_flip_right_in,
-//                                    R.animator.card_flip_right_out,
-//                                    R.animator.card_flip_left_in,
-//                                    R.animator.card_flip_left_out)
-                            .replace(R.id.fragment_container_locator, listFragment, "LIST_FRAGMENT")
-                            .addToBackStack(null)
-                            .commit();
-                    fab.setImageResource(R.drawable.ic_map_black_24dp);
-                }
-
-            }
-        });
-
+        SupportMapFragment mapFragment = new SupportMapFragment();
+        LoginTask task = new LoginTask();
+        String url = buildPubSearchURL();
+        task.execute(url);
+        mapFragment.getMapAsync(this);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container_locator, mapFragment)
+                .commit();
     }
 
     /**
@@ -139,7 +93,7 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocaiton));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocaiton, 11f));
         mMap.setOnInfoWindowClickListener(this);
-
+//        addMarkers();
     }
 
     /**
@@ -185,20 +139,32 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
 
         Pub pub = mPubList.get(mPubMarkerMap.get(marker));
 
-        Intent detail = new Intent(this, PubDetails.class);
+//        Intent detail = new Intent(this, PubDetails.class);
+//        detail.putExtra("Name", marker.getTitle());
+//        detail.putExtra("RATING", pub.getmRating());
+//        detail.putExtra("ISOPEN", pub.getIsOpen());
+//        detail.putExtra("ID", pub.getmPlaceID());
+//        startActivity(detail);
 
-        detail.putExtra("Name", marker.getTitle());
-        detail.putExtra("RATING", pub.getmRating());
-        detail.putExtra("ISOPEN", pub.getIsOpen());
-        detail.putExtra("ID", pub.getmPlaceID());
+        Bundle args = new Bundle();
+        args.putString("NAME", pub.getmName());
+//        args.putString("WEBLINK", pub.getmName());
+        args.putBoolean("IS_OPEN", pub.getIsOpen());
+        args.putDouble("RATING", pub.getmRating());
+//        args.putString("PICTURES", pub.getmName());
+//        args.putString("PHONE", pub.getmPhone());
+//        args.putString("ADDRESS", pub.getmName());
+//        args.putString("DETAILS", pub.getmName());
 
-        startActivity(detail);
+        PubDetailsFragment detailsFragment = new PubDetailsFragment();
+        detailsFragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_locator, detailsFragment, "DETAILS_FRAGMENT")
+                .addToBackStack(null)
+                .commit();
+
     }
 
-    /**
-     * Creates the PubSearchTask that executes the Pub Search.
-     */
-    private class PubSearchTask extends AsyncTask<String, Void, String> {
 
     public List<Pub> getmPubList() {
         return mPubList;
@@ -208,64 +174,10 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         mPubList = (ArrayList<Pub>) thePubList;
     }
 
-//    @Override
-//    public void onListFragmentInteraction(Pub item) {
-//        // Capture the course fragment from the activity layout
-//        CourseDetailFragment courseDetailFragment = (CourseDetailFragment)
-//                getSupportFragmentManager().findFragmentById(R.id.course_detail_frag);
-//        if (courseDetailFragment != null) {
-//            // If courseDetail frag is available, we're in two-pane layout...
-//            // Call a method in the course detail fragment to update its content
-//            courseDetailFragment.updateView(item);
-//        } else {
-//            // If the frag is not available, we're in the one-pane layout and must swap frags...
-//            // Create fragment and give it an argument for the selected student
-//            // Replace whatever is in the fragment_container view with this fragment,
-//            // and add the transaction to the back stack so the user can navigate back
-//            courseDetailFragment = new CourseDetailFragment();
-//            Bundle args = new Bundle();
-//            args.putSerializable(CourseDetailFragment.COURSE_ITEM_SELECTED, item);
-//            courseDetailFragment.setArguments(args);
-//
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.fragment_container, courseDetailFragment)
-//                    .addToBackStack(null)
-//                    .commit();
-//        }
-//    }
-    public List<Pub> getmPubList() {
-        return mPubList;
-    }
 
-    public void setmPubList(List thePubList) {
-        mPubList = (ArrayList<Pub>) thePubList;
-    }
+    //NEED this
+    private class LoginTask extends AsyncTask<String, Void, String> {
 
-//    @Override
-//    public void onListFragmentInteraction(Pub item) {
-//        // Capture the course fragment from the activity layout
-//        CourseDetailFragment courseDetailFragment = (CourseDetailFragment)
-//                getSupportFragmentManager().findFragmentById(R.id.course_detail_frag);
-//        if (courseDetailFragment != null) {
-//            // If courseDetail frag is available, we're in two-pane layout...
-//            // Call a method in the course detail fragment to update its content
-//            courseDetailFragment.updateView(item);
-//        } else {
-//            // If the frag is not available, we're in the one-pane layout and must swap frags...
-//            // Create fragment and give it an argument for the selected student
-//            // Replace whatever is in the fragment_container view with this fragment,
-//            // and add the transaction to the back stack so the user can navigate back
-//            courseDetailFragment = new CourseDetailFragment();
-//            Bundle args = new Bundle();
-//            args.putSerializable(CourseDetailFragment.COURSE_ITEM_SELECTED, item);
-//            courseDetailFragment.setArguments(args);
-//
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.fragment_container, courseDetailFragment)
-//                    .addToBackStack(null)
-//                    .commit();
-//        }
-//    }
 
         @Override
         protected String doInBackground(String... urls) {
@@ -292,6 +204,7 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
                         urlConnection.disconnect();
                 }
             }
+            Log.i("Response", response);
             return response;
         }
 
