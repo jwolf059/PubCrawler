@@ -27,4 +27,10 @@
     <string name="create_crawl_title">Create A Crawl</string>
     <string name="select_pub">Select up to 6 locaitons</string>
     <string name="map_view">Map View</string>
+    <string name="pub_name">PUB_NAME</string>
+    <string name="pub_rating">PUB_RATING</string>
+    <string name="pub_web_link">PUB_WEB_LINK</string>
+    <string name="pub_isOpen">PUB_IS_OPEN</string>
+    <string name="pub_hours">PUB_HOURS</string>
+
 </resources>

@@ -46,10 +46,10 @@ public class LoginActivity extends AppCompatActivity {
 
     /** String containing the URL to the authenticate.php code */
     public final static String SIGNIN_URL = "http://cssgate.insttech.washington.edu/~jwolf059/authenticate.php?";
-    // Contains the SharedPreference object
-    private SharedPreferences mSharedPreferences;
     // Facebook Callback manager
     CallbackManager callbackManager;
+    // Contains the SharedPreference object
+    private SharedPreferences mSharedPreferences;
     //String containing the LoginId
     private String mloginID;
     // String containing the password
@@ -210,7 +210,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void logIn(String url) {
         LoginTask task = new LoginTask();
-        task.execute(new String[]{url.toString()});
+        task.execute(url.toString());
     }
 
     /**
