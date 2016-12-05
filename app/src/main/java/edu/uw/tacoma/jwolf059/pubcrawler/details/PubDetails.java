@@ -4,7 +4,7 @@
 *
 */
 
-package edu.uw.tacoma.jwolf059.pubcrawler;
+package edu.uw.tacoma.jwolf059.pubcrawler.details;
 
 
 import android.app.Fragment;
@@ -24,6 +24,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import edu.uw.tacoma.jwolf059.pubcrawler.R;
 
 
 /**

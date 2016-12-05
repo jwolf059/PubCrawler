@@ -1,4 +1,4 @@
-package edu.uw.tacoma.jwolf059.pubcrawler;
+package edu.uw.tacoma.jwolf059.pubcrawler.details;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import edu.uw.tacoma.jwolf059.pubcrawler.R;
 
 
 /**

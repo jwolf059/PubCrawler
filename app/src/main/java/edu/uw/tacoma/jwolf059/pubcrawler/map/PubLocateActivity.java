@@ -3,14 +3,22 @@
 * TCSS450 - Fall 2016
 *
  */
-package edu.uw.tacoma.jwolf059.pubcrawler;
+package edu.uw.tacoma.jwolf059.pubcrawler.map;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,6 +40,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.uw.tacoma.jwolf059.pubcrawler.details.PubDetailsFragment;
+import edu.uw.tacoma.jwolf059.pubcrawler.R;
+import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
 
@@ -67,6 +78,8 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pub_locator);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
         SupportMapFragment mapFragment = new SupportMapFragment();
         LoginTask task = new LoginTask();
@@ -93,7 +106,6 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocaiton));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocaiton, 11f));
         mMap.setOnInfoWindowClickListener(this);
-//        addMarkers();
     }
 
     /**
@@ -138,24 +150,10 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
     public void onInfoWindowClick(Marker marker) {
 
         Pub pub = mPubList.get(mPubMarkerMap.get(marker));
-
-//        Intent detail = new Intent(this, PubDetails.class);
-//        detail.putExtra("Name", marker.getTitle());
-//        detail.putExtra("RATING", pub.getmRating());
-//        detail.putExtra("ISOPEN", pub.getIsOpen());
-//        detail.putExtra("ID", pub.getmPlaceID());
-//        startActivity(detail);
-
         Bundle args = new Bundle();
         args.putString("NAME", pub.getmName());
-//        args.putString("WEBLINK", pub.getmName());
         args.putBoolean("IS_OPEN", pub.getIsOpen());
         args.putDouble("RATING", pub.getmRating());
-//        args.putString("PICTURES", pub.getmName());
-//        args.putString("PHONE", pub.getmPhone());
-//        args.putString("ADDRESS", pub.getmName());
-//        args.putString("DETAILS", pub.getmName());
-
         PubDetailsFragment detailsFragment = new PubDetailsFragment();
         detailsFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
@@ -238,6 +236,41 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
             }
 
         }
+    }
+
+    /**
+     * If the Menu Item is selected Log the user out.
+     * @param item the menu item selected
+     * @return boolean if action was ttaken.
+     */
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            SharedPreferences sharedPreferences =
+                    getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+            sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
+                    .commit();
+            LoginManager.getInstance().logOut();
+
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**{@inheritDoc}
+     *
+     * @param menu the menu to be created
+     * @return boolean if menu was created
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
     }
 
 }

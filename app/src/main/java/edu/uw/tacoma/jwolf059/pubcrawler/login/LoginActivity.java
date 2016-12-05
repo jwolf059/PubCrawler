@@ -3,7 +3,7 @@
 * TCSS450 - Fall 2016
 *
 */
-package edu.uw.tacoma.jwolf059.pubcrawler;
+package edu.uw.tacoma.jwolf059.pubcrawler.login;
 
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +33,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import edu.uw.tacoma.jwolf059.pubcrawler.OptionScreens.PubCrawler_Main;
+import edu.uw.tacoma.jwolf059.pubcrawler.R;
 
 /**
  * The LoginActivity Activity will allows for the authetication of a single user. It provides each
@@ -125,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                         return;
                     }
                     //Verifies that an email is used
-                    if (!mloginID.contains("@")) {
+                    if (!mloginID.contains("@") && mloginID.length() > 6) {
                         Toast.makeText(v.getContext(), "Enter a valid email address"
                                 , Toast.LENGTH_SHORT)
                                 .show();
@@ -303,8 +306,8 @@ public class LoginActivity extends AppCompatActivity {
                             .show();
                 }
             } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Something wrong with the data" +
-                        e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Please try again"
+                       , Toast.LENGTH_LONG).show();
                 Log.e("Wrong Data", e.getMessage());
             }
 

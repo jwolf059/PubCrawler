@@ -1,4 +1,4 @@
-package edu.uw.tacoma.jwolf059.pubcrawler;
+package edu.uw.tacoma.jwolf059.pubcrawler.OptionScreens;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,10 @@ import android.view.View;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
+
+import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
+import edu.uw.tacoma.jwolf059.pubcrawler.map.PubLocateActivity;
+import edu.uw.tacoma.jwolf059.pubcrawler.R;
 
 public class PubCrawler_Main extends AppCompatActivity {
 
@@ -49,6 +53,11 @@ public class PubCrawler_Main extends AppCompatActivity {
 
     }
 
+    /**
+     * If the Menu Item is selected Log the user out.
+     * @param item the menu item selected
+     * @return boolean if action was ttaken.
+     */
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_logout) {

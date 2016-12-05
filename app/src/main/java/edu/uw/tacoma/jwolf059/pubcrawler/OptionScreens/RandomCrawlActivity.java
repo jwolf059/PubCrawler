@@ -4,13 +4,19 @@
 *
  */
 
-package edu.uw.tacoma.jwolf059.pubcrawler;
+package edu.uw.tacoma.jwolf059.pubcrawler.OptionScreens;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +24,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.facebook.login.LoginManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +38,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import edu.uw.tacoma.jwolf059.pubcrawler.R;
+import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
+import edu.uw.tacoma.jwolf059.pubcrawler.map.PubCrawlMapActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Crawl;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
@@ -68,6 +79,8 @@ public class RandomCrawlActivity extends AppCompatActivity implements AdapterVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random_crawl);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
         PubSearchTask task = new PubSearchTask();
         mPubList = new ArrayList<>();
         Button button = (Button) findViewById(R.id.create_crawl);
@@ -241,6 +254,41 @@ public class RandomCrawlActivity extends AppCompatActivity implements AdapterVie
             }
 
         }
+    }
+
+    /**
+     * If the Menu Item is selected Log the user out.
+     * @param item the menu item selected
+     * @return boolean if action was ttaken.
+     */
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            SharedPreferences sharedPreferences =
+                    getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+            sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
+                    .commit();
+            LoginManager.getInstance().logOut();
+
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**{@inheritDoc}
+     *
+     * @param menu the menu to be created
+     * @return boolean if menu was created
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
     }
 }
 

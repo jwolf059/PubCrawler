@@ -3,12 +3,21 @@
 * TCSS450 - Fall 2016
 *
  */
-package edu.uw.tacoma.jwolf059.pubcrawler;
+package edu.uw.tacoma.jwolf059.pubcrawler.map;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,6 +29,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import edu.uw.tacoma.jwolf059.pubcrawler.CrawlDetailsActivity;
+import edu.uw.tacoma.jwolf059.pubcrawler.details.PubDetails;
+import edu.uw.tacoma.jwolf059.pubcrawler.R;
+import edu.uw.tacoma.jwolf059.pubcrawler.listView.PubCrawlFragment;
+import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Crawl;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
@@ -37,6 +51,8 @@ public class PubCrawlMapActivity extends AppCompatActivity implements OnMapReady
     private GoogleMap mMap;
     // ArrayList of Pub object created using returned JSON Object.
     private ArrayList<Pub> mPubList;
+    //Crawl Object
+    private Crawl mCrawl;
     // Map used to store the Marker Object and the Index of the referenced pub object.
     private HashMap<Marker, Integer> mPubMarkerMap = new HashMap<>();
 
@@ -48,10 +64,23 @@ public class PubCrawlMapActivity extends AppCompatActivity implements OnMapReady
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_map_crawl);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_crawl);
         mapFragment.getMapAsync(this);
+
+        Button bt = (Button) findViewById(R.id.continue_button);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), CrawlDetailsActivity.class);
+                i.putExtra(PubCrawlFragment.PUB_LIST, mCrawl);
+                startActivity(i);
+            }
+        });
 
 
     }
@@ -82,8 +111,8 @@ public class PubCrawlMapActivity extends AppCompatActivity implements OnMapReady
      */
     public void addMarkers() {
 
-        Crawl crawl = (Crawl) getIntent().getSerializableExtra("object");
-        mPubList = crawl.getmCrawlPath();
+        mCrawl = (Crawl) getIntent().getSerializableExtra("object");
+        mPubList = mCrawl.getmCrawlPath();
         for (int i = 0; i < mPubList.size(); i++) {
             Pub pub = mPubList.get(i);
             //Creates a LatLng object with the pubs locaiton.
@@ -113,6 +142,42 @@ public class PubCrawlMapActivity extends AppCompatActivity implements OnMapReady
         detail.putExtra("ID", pub.getmPlaceID());
 
         startActivity(detail);
+    }
+
+    /**
+     * If the Menu Item is selected Log the user out.
+     * @param item the menu item selected
+     * @return boolean if action was taken.
+     */
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            SharedPreferences sharedPreferences =
+                    getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+            sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
+                    .commit();
+            LoginManager.getInstance().logOut();
+
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    /**{@inheritDoc}
+     *
+     * @param menu the menu to be created
+     * @return boolean if menu was created
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
     }
 
 

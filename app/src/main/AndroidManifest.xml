@@ -25,14 +25,14 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".PubCrawler_Main" />
+        <activity android:name=".OptionScreens.PubCrawler_Main" />
         <activity
-            android:name=".PubLocateActivity"
+            android:name=".map.PubLocateActivity"
             android:label="@string/title_activity_find_pub"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CrawlActivity" />
+        <activity android:name=".OptionScreens.CrawlActivity" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".login.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -45,19 +45,22 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
         <activity
-            android:name=".PubCrawlMapActivity"
+            android:name=".map.PubCrawlMapActivity"
             android:label="@string/activity_pub_crawl_map"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".login.RegisterActivity"
             android:label="@string/title_activity_register"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PubDetails"
+            android:name=".details.PubDetails"
             android:label="@string/pub_details" />
-        <activity android:name=".RandomCrawlActivity" />
-        <activity android:name=".UserCreatedCrawlActivity"></activity>
+        <activity android:name=".OptionScreens.RandomCrawlActivity" />
+        <activity android:name=".OptionScreens.UserCreatedCrawlActivity" />
+        <activity android:name=".CrawlDetailsActivity" />
+        <activity android:name=".CrawlPageActivity"></activity>
     </application>
 
 </manifest>

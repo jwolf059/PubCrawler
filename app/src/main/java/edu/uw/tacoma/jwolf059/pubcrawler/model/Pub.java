@@ -121,7 +121,7 @@ public class Pub implements Serializable {
                     JSONArray types = obj.getJSONArray("types");
                     String hasFood = "No";
                     for (int k = 0; i < types.length(); i++) {
-                        if (((String) types.get(i)).equals("food") || ((String) types.get(i)).equals("food")) {
+                        if (((String) types.get(i)).equals("restaurant") || ((String) types.get(i)).equals("food")) {
                             hasFood = "Yes";
                             break;
                         }
@@ -206,7 +206,7 @@ public class Pub implements Serializable {
      * Getter method for the mHasFood Field.
      * @return if the Pub has food.
      */
-    public String gmHasFood() {
+    public String getmHasFood() {
 
         return mHasFood;
     }

@@ -65,14 +65,7 @@ public class Crawl implements Serializable {
             String url = distanceURLBuilder(mCrawlPath.get(i - 1).getmAddress(), mCrawlPath.get(i).getmAddress());
             DistanceTask mTask = new DistanceTask();
             mTask.execute(new String[]{url});
-
-            try {
-                Thread.sleep(2000);
-                mDistance.put(i, mLegDistance);
-
-            } catch (Exception e) {
-                Log.e("CaculateDistance: ", e.getMessage());
-            }
+            mDistance.put(i, mLegDistance);
         }
     }
 
@@ -100,15 +93,13 @@ public class Crawl implements Serializable {
 
             if (mCrawlPath.size() == mCrawlPath.size() / 2) {
                 Pub p = thePubList.get(index);
-                // Remove this once food check is done.
-                addPub(p);
-                thePubList.remove(index);
-//                if (p.hasFood()) {
-//                    addPub(p);
-//                    thePubList.remove(index);
-//                } else {
-//                    continue;
-//                }
+
+                if (p.getmHasFood().endsWith("Yes")) {
+                    addPub(p);
+                    thePubList.remove(index);
+                } else {
+                    continue;
+                }
             } else {
                 addPub(thePubList.get(index));
                 thePubList.remove(index);
@@ -136,16 +127,16 @@ public class Crawl implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append(URL_1);
         sb.append("'");
-        sb.append("625%20Saint%20Helens%20Avenue,%20Tacoma");
+        sb.append(cleanSpace(theOrigin));
 
 
         sb.append("'");
         sb.append("&destinations=");
         sb.append("'");
-        sb.append("2101%20Jefferson%20Avenue,%20Tacoma");
+        sb.append(cleanSpace(theDestination));
         sb.append("'");
         sb.append(URL_2);
-
+        Log.i("URL: ", sb.toString());
         return sb.toString();
     }
 
@@ -204,12 +195,22 @@ public class Crawl implements Serializable {
 
             try {
                 JSONObject jsonObject = new JSONObject(result);
-                JSONArray rows = jsonObject.getJSONArray("elements");
-                JSONObject distance = rows.getJSONObject(0);
+                Log.e("jsonObject: ", jsonObject.toString());
+                JSONArray rows = jsonObject.getJSONArray("rows");
+                Log.e("rows: ", rows.toString());
+                JSONObject first = rows.getJSONObject(0);
+                Log.e("first: ", first.toString());
+                Log.e("Elements: ", "before");
+                JSONArray elements = first.getJSONArray("elements");
+                JSONObject second = elements.getJSONObject(0);
 
-                Log.i("Distance", ": " + distance.getDouble("value"));
-                mLegDistance = distance.getDouble("value");
-                Log.i("Distance :", distance.getString("value"));
+                Log.e("Elements: ", second.toString());
+
+                JSONObject distanceObject = second.getJSONObject("distance");
+                int distance = distanceObject.getInt("value");
+
+                mLegDistance = distance;
+                Log.i("Distance :", String.valueOf(distance));
 
             } catch (JSONException e) {
                 Toast.makeText(getApplicationContext(), "Unable to caculate the distance" +
@@ -217,6 +218,22 @@ public class Crawl implements Serializable {
                 Log.e("Wrong Data", e.getMessage());
             }
 
+
         }
+    }
+
+    private String cleanSpace(String theText) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < theText.length(); i++) {
+            if (theText.charAt(i) == 32) {
+                stringBuilder.append("%20");
+            } else if (theText.charAt(i) == 35) {
+                stringBuilder.append("%23");
+            } else {
+                stringBuilder.append(theText.charAt(i));
+            }
+        }
+        return stringBuilder.toString();
+
     }
 }

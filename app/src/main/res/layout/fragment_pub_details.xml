@@ -2,15 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="10dp"
     android:orientation="vertical"
-    tools:context="edu.uw.tacoma.jwolf059.pubcrawler.PubDetailsFragment">
+    android:background="@color/colorPrimary"
+    tools:context="edu.uw.tacoma.jwolf059.pubcrawler.details.PubDetailsFragment">
 
     <TextView
         android:id="@+id/name_text_view"
         style="@style/PubName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="?attr/actionBarSize" />
 
     <LinearLayout
         android:layout_width="match_parent"

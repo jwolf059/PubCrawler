@@ -2,24 +2,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_light_background"
-    tools:context="edu.uw.tacoma.jwolf059.pubcrawler.CrawlTypeFragment">
-
+    android:background="@drawable/tallbeer"
+    tools:context="edu.uw.tacoma.jwolf059.pubcrawler.OptionScreens.CrawlTypeFragment">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="60dp"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:layout_gravity="center"
+            android:textColor="@color/cardview_light_background"
+            android:text="Random Pub Crawl" />
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="60dp"
+            android:textColor="@color/cardview_light_background"
             android:text="@string/Random_Instructions" />
+
+    </LinearLayout>
 
         <Button
             android:id="@+id/button3"
@@ -37,17 +61,38 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="20dp"
-                android:text="@string/Select_Crawl" />
+                android:background="@color/colorPrimary">
 
+                <TextView
+                    android:id="@+id/title2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:textStyle="bold"
+                    android:textSize="15dp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/cardview_light_background"
+                    android:text="Create a Crawl" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:textColor="@color/cardview_light_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:text="@string/Select_Crawl" />
+            </LinearLayout>
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
@@ -61,4 +106,5 @@
 
         </LinearLayout>
     </LinearLayout>
+    </ScrollView>
 </FrameLayout>
