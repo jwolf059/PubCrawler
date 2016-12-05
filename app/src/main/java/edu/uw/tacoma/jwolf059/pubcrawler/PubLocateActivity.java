@@ -43,9 +43,7 @@ import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
  */
 public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
-    public static final String URL_0 = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
-            "json?location=47.253361,-122.439191&keyword=brewery&name=bar&type=pub&radius=10000" +
-            "&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
+    public static final String URL_0 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=47.253361,-122.439191&keyword=brewery&name=bar&type=pub&radius=10000&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
 
     /** URl used to gather pub locaitons. The locaiton must be added to the end of the string */
     public static final String URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
@@ -151,6 +149,7 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
 //        args.putString("WEBLINK", pub.getmName());
         args.putBoolean("IS_OPEN", pub.getIsOpen());
         args.putDouble("RATING", pub.getmRating());
+        args.putString("ID", pub.getmPlaceID());
 //        args.putString("PICTURES", pub.getmName());
 //        args.putString("PHONE", pub.getmPhone());
 //        args.putString("ADDRESS", pub.getmName());

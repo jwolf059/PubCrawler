@@ -20,5 +20,6 @@
     <string name="pub_web_link">PUB_WEB_LINK</string>
     <string name="pub_isOpen">PUB_IS_OPEN</string>
     <string name="pub_hours">PUB_HOURS</string>
+    <string name="web_link"><a>www.google.com</a></string>
 
 </resources>
