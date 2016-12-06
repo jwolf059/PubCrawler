@@ -53,7 +53,14 @@
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
             android:onClick="randomCrawl"
-            android:text="@string/random_button" />
+            android:text="@string/random_button"
+            android:layout_weight="1"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:textColor="#F7F7F5"/>
 
 
         <LinearLayout
@@ -101,7 +108,14 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:onClick="selectCrawl"
-                android:text="@string/create_crawl_button" />
+                android:text="@string/create_crawl_button"
+                android:layout_weight="1"
+                android:background="@drawable/buttonshape"
+                android:shadowColor="#A8A8A8"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:textColor="#F7F7F5"/>
 
 
         </LinearLayout>

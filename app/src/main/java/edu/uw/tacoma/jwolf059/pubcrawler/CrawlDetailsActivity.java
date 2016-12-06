@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
 
@@ -42,6 +43,11 @@ public class CrawlDetailsActivity extends AppCompatActivity implements PubCrawlF
         setSupportActionBar(myToolbar);
         mCrawl = (Crawl) getIntent().getSerializableExtra(PUB_LIST);
         mPubList = mCrawl.getmCrawlPath();
+
+        TextView crawlTitle = (TextView) findViewById(R.id.crawl_title);
+
+        Log.e("get name: ", crawlTitle.getText().toString());
+        crawlTitle.setText(mCrawl.getmName());
 
         PubCrawlFragment publistDetails = new PubCrawlFragment();
         Bundle arg = new Bundle();
