@@ -89,7 +89,7 @@ public class Crawl implements Serializable {
         while (mCrawlPath.size() <= theStops) {
             int index = rand.nextInt(thePubList.size());
 
-            if (mCrawlPath.size() == mCrawlPath.size() / 2) {
+            if (mCrawlPath.size() == theStops / 2) {
                 Pub p = thePubList.get(index);
 
                 if (p.getmHasFood().endsWith("Yes")) {

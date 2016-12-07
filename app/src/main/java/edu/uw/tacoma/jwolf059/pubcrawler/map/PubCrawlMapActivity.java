@@ -69,6 +69,8 @@ public class PubCrawlMapActivity extends AppCompatActivity implements OnMapReady
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_map_crawl);
+        mCrawl = (Crawl) getIntent().getSerializableExtra("object");
+        System.out.println("Name: " + mCrawl.getmName());
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

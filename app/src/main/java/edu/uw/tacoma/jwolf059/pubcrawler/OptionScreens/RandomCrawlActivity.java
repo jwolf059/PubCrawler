@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -77,6 +78,8 @@ public class RandomCrawlActivity extends AppCompatActivity implements AdapterVie
 
     private String mCrawlName;
 
+    private Boolean wantFood = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,12 +93,26 @@ public class RandomCrawlActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onClick(View v) {
                 EditText nameField = (EditText) findViewById(R.id.crawl_name);
-                mCrawlName = nameField.toString();
+                mCrawlName = nameField.getText().toString();
                 mCrawl = new Crawl(mCrawlName);
-                mCrawl.randomCrawlCreation(mPubList,mStartPub, mNumberOfStops, false);
+                mCrawl.randomCrawlCreation(mPubList,mStartPub, mNumberOfStops, wantFood);
                 Intent crawlMap = new Intent(getApplicationContext(), PubCrawlMapActivity.class);
                 crawlMap.putExtra("object", mCrawl);
                 startActivity(crawlMap);
+            }
+        });
+
+        CheckBox cb = (CheckBox) findViewById(R.id.checkBox2);
+        cb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(wantFood) {
+                    wantFood = false;
+                    Log.e("Food", "False");
+                } else {
+                    wantFood = true;
+                    Log.e("Food", "true");
+                }
             }
         });
         if (!searchCompleted()) {

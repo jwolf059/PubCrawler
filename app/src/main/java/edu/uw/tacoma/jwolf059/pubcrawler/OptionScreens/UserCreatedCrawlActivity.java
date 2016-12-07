@@ -89,7 +89,7 @@ public class UserCreatedCrawlActivity extends AppCompatActivity implements Adapt
             @Override
             public void onClick(View v) {
                 EditText nameField = (EditText) findViewById(R.id.crawl_name);
-                mCrawlName = nameField.toString();
+                mCrawlName = nameField.getText().toString();
                 mCrawl = new Crawl(mCrawlName);
 
                 //Add the user selected pubs

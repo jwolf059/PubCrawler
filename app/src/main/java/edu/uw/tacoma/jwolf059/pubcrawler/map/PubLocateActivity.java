@@ -80,12 +80,21 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         setContentView(R.layout.activity_pub_locator);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-
         SupportMapFragment mapFragment = new SupportMapFragment();
+
+
         LoginTask task = new LoginTask();
         String url = buildPubSearchURL();
-        task.execute(url);
-        mapFragment.getMapAsync(this);
+        try {
+            mapFragment.getMapAsync(this);
+            String result = task.execute(url).get();
+
+
+
+        } catch (Exception e) {
+            Log.e("PubLocate" , e.getMessage());
+        }
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container_locator, mapFragment)
@@ -106,6 +115,7 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocaiton));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocaiton, 11f));
         mMap.setOnInfoWindowClickListener(this);
+        addMarkers();
     }
 
     /**
@@ -202,6 +212,8 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
                 } finally {
                     if (urlConnection != null)
                         urlConnection.disconnect();
+
+
                 }
             }
             Log.i("Response", response);
@@ -209,55 +221,59 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         }
 
 
-        /**
-         * It checks to see if there was a problem with the URL(Network) which is when an
-         * exception is caught. It tries to call the parse Method and checks to see if it was successful.
-         * If not, it displays the exception.
-         *
-         * @param result
-         */
-        @Override
-        protected void onPostExecute(String result) {
-
-            Log.i("json result ", result);
-            mPubList = Pub.parsePubJSON(result);
-            addMarkers();
-        }
-    }
-
     /**
-     * If the Menu Item is selected Log the user out.
-     * @param item the menu item selected
-     * @return boolean if action was ttaken.
-     */
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_logout) {
-            SharedPreferences sharedPreferences =
-                    getDefaultSharedPreferences(getApplicationContext());
-            sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
-                    .commit();
-            LoginManager.getInstance().logOut();
-
-            Intent i = new Intent(this, LoginActivity.class);
-            startActivity(i);
-            finish();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**{@inheritDoc}
+     * It checks to see if there was a problem with the URL(Network) which is when an
+     * exception is caught. It tries to call the parse Method and checks to see if it was successful.
+     * If not, it displays the exception.
      *
-     * @param menu the menu to be created
-     * @return boolean if menu was created
+     * @param result
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
+    protected void onPostExecute(String result) {
+
+        Log.i("json result ", result);
+        mPubList = Pub.parsePubJSON(result);
+
+        }
     }
+
+
+        /**
+         * If the Menu Item is selected Log the user out.
+         *
+         * @param item the menu item selected
+         * @return boolean if action was ttaken.
+         */
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == R.id.action_logout) {
+                SharedPreferences sharedPreferences =
+                        getDefaultSharedPreferences(getApplicationContext());
+                sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
+                        .commit();
+                LoginManager.getInstance().logOut();
+
+                Intent i = new Intent(this, LoginActivity.class);
+                startActivity(i);
+                finish();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @param menu the menu to be created
+         * @return boolean if menu was created
+         */
+        @Override
+        public boolean onCreateOptionsMenu(Menu menu) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.main_menu, menu);
+            return true;
+        }
+
 
 }

@@ -96,12 +96,17 @@ public class Pub implements Serializable {
                     boolean open = true;
                     String name = obj.getString(Pub.NAME);
                     String id = obj.getString(Pub.PLACE_ID);
-                    double rate = obj.getDouble(Pub.RATING);
+
                     String address = obj.getString(Pub.ADDRESS);
 
                     double lat = location.getDouble(Pub.LAT);
                     double lng = location.getDouble(Pub.LONG);
-
+                    double rate = 0.0;
+                    try {
+                        rate = obj.getDouble(Pub.RATING);
+                    } catch (JSONException e) {
+                        rate = 0.0;
+                    }
                     //Some result from Pub JSON Objects dont have a opening_hours object
                     try {
                         JSONObject hours = obj.getJSONObject("opening_hours");

@@ -24,6 +24,27 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp">
+
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map_locate"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="edu.uw.tacoma.jwolf059.maptester.MapsActivity" />
+    </FrameLayout>
+
     <include layout="@layout/content_pub_locator" />
+
 
 </android.support.design.widget.CoordinatorLayout>

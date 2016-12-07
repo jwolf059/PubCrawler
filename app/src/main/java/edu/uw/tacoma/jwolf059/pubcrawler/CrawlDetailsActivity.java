@@ -43,13 +43,14 @@ public class CrawlDetailsActivity extends AppCompatActivity implements PubCrawlF
         setContentView(R.layout.activity_crawl_details);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+
         mCrawl = (Crawl) getIntent().getSerializableExtra(PUB_LIST);
         mPubList = mCrawl.getmCrawlPath();
 
         TextView crawlTitle = (TextView) findViewById(R.id.crawl_title);
-
-        Log.e("get name: ", crawlTitle.getText().toString());
-        crawlTitle.setText(mCrawl.getmName());
+        String title = mCrawl.getmName();
+        Log.e("get name: ", title);
+        crawlTitle.setText(title);
 
         PubCrawlFragment publistDetails = new PubCrawlFragment();
         Bundle arg = new Bundle();
@@ -85,7 +86,7 @@ public class CrawlDetailsActivity extends AppCompatActivity implements PubCrawlF
         PubDetailsFragment detailsFragment = new PubDetailsFragment();
         detailsFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container_locator, detailsFragment, "DETAILS_FRAGMENT")
+                .replace(R.id.activity_crawl_details, detailsFragment, "DETAILS_FRAGMENT")
                 .addToBackStack(null)
                 .commit();
     }

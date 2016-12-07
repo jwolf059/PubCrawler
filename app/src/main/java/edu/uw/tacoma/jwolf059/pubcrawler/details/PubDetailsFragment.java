@@ -78,10 +78,6 @@ public class PubDetailsFragment extends Fragment {
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
 
-
-
-
-
         mHours = (TextView) view.findViewById(R.id.hours_text_view);
         mWebsite = (TextView) view.findViewById(R.id.website_text_view);
         mImage = (ImageView) view.findViewById(R.id.image_view);
@@ -110,7 +106,13 @@ public class PubDetailsFragment extends Fragment {
             openStatusView.setTextColor(Color.RED);
             openStatusView.setText("Closed");
         }
-
+        try {
+            String url = buildDetailsURL();
+            DetailTask detail = new DetailTask();
+            String result = detail.execute(url).get();
+        } catch (Exception e) {
+            Log.e("Details", e.getMessage());
+        }
 
         Button bt = (Button) view.findViewById(R.id.share_btn);
         bt.setOnClickListener(new View.OnClickListener() {
@@ -127,9 +129,6 @@ public class PubDetailsFragment extends Fragment {
             }
         });
 
-        String url = buildDetailsURL();
-        DetailTask detail = new DetailTask();
-        detail.execute(url);
 
         return view;
     }
@@ -141,7 +140,7 @@ public class PubDetailsFragment extends Fragment {
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        }
+    }
 
     /**
      * Builds the URL using the Place ID. The URL will allow access to details for the given place.
@@ -260,9 +259,11 @@ public class PubDetailsFragment extends Fragment {
 
                 // Displays the information.
                 mWebsite.setText(mWebsiteString);
+
+                System.out.println(URL_3 + 418 + "&photoreference=" + photoReference + URL_2);
                 // Set the image.
                 new DownloadImageTask((ImageView) getActivity().findViewById(R.id.image_view))
-                        .execute(URL_3 + mImage.getWidth() + "&photoreference=" + photoReference + URL_2);
+                        .execute(URL_3 + 418 + "&photoreference=" + photoReference + URL_2);
                 // Set the address.
                 mAddress.setText(address);
                 mPhone.setText(phone);
