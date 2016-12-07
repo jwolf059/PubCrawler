@@ -38,6 +38,8 @@ import edu.uw.tacoma.jwolf059.pubcrawler.map.PubCrawlMapActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Crawl;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class UserCreatedCrawlActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     /**
@@ -93,15 +95,20 @@ public class UserCreatedCrawlActivity extends AppCompatActivity implements Adapt
                 //Add the user selected pubs
                 if (mStartPub != null) {
                     mCrawl.addPub(mStartPub);
-                } else if (mSecondStop != null) {
+                }
+                if (mSecondStop != null) {
                     mCrawl.addPub(mSecondStop);
-                } else if (mThirdStop != null) {
+                }
+                if (mThirdStop != null) {
                     mCrawl.addPub(mThirdStop);
-                } else if (mFourthStop != null) {
+                }
+                if (mFourthStop != null) {
                     mCrawl.addPub(mFourthStop);
-                } else if (mFifthStop != null) {
+                }
+                if (mFifthStop != null) {
                     mCrawl.addPub(mFifthStop);
-                } else if (mSixthStop != null) {
+                }
+                if (mSixthStop != null) {
                     mCrawl.addPub(mSixthStop);
                 }
 
@@ -175,28 +182,54 @@ public class UserCreatedCrawlActivity extends AppCompatActivity implements Adapt
         mPubListSpinnerSix.setAdapter(pubDataAdapterSix);
     }
 
+    /**
+     * Gets the position of each selected item and places the corresponding pub into the class variable.
+     * If the selection is 0 (default value) then set the pub variable to null.
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        if (position != 0) {
+
             if (parent.getId() == (findViewById(R.id.pub_selector1).getId())) {
-                mStartPub = mPubList.get(position);
+                if (position != 0) {
+                    mStartPub = mPubList.get(position - 1);
+                } else {
+                    mStartPub = null;
+                }
 
             } else if (parent.getId() == (findViewById(R.id.pub_selector2).getId())) {
-                mSecondStop = mPubList.get(position);
+                    if (position != 0) {
+                        mSecondStop = mPubList.get(position - 1);
+                    } else {
+                        mSecondStop = null;
+                    }
 
             } else if (parent.getId() == (findViewById(R.id.pub_selector3).getId())) {
-                mThirdStop = mPubList.get(position);
+                if (position != 0) {
+                    mThirdStop = mPubList.get(position - 1);
+                } else {
+                    mThirdStop = null;
+                }
 
             } else if (parent.getId() == (findViewById(R.id.pub_selector4).getId())) {
-                mFourthStop = mPubList.get(position);
+                if (position != 0) {
+                    mFourthStop = mPubList.get(position - 1);
+                } else {
+                    mFourthStop = null;
+                }
 
             } else if (parent.getId() == (findViewById(R.id.pub_selector5).getId())) {
-                mFifthStop = mPubList.get(position);
+                if (position != 0) {
+                    mFifthStop = mPubList.get(position - 1);
+                } else {
+                    mFifthStop = null;
+                }
 
             } else if (parent.getId() == (findViewById(R.id.pub_selector6).getId())) {
-                mSixthStop = mPubList.get(position);
-
+                if (position != 0) {
+                    mSixthStop = mPubList.get(position - 1);
+                } else {
+                    mSixthStop = null;
             }
         }
 
@@ -277,21 +310,21 @@ public class UserCreatedCrawlActivity extends AppCompatActivity implements Adapt
         protected void onPostExecute(String result) {
 
             Log.i("json result ", result);
+//
+//            try {
+//                JSONObject jsonObject = new JSONObject(result);
+//                JSONArray jArray = jsonObject.getJSONArray("results");
+//                int len = jArray.length();
 
-            try {
-                JSONObject jsonObject = new JSONObject(result);
-                JSONArray jArray = jsonObject.getJSONArray("results");
-                int len = jArray.length();
-
-                mPubList = Pub.parsePubJSON(jArray);
+                mPubList = Pub.parsePubJSON(result);
                 createUI();
 
 
-            } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Something wrong with the data" +
-                        e.getMessage(), Toast.LENGTH_LONG).show();
-                Log.e("Wrong Data", e.getMessage());
-            }
+//            } catch (JSONException e) {
+//                Toast.makeText(getApplicationContext(), "Something wrong with the data" +
+//                        e.getMessage(), Toast.LENGTH_LONG).show();
+//                Log.e("Wrong Data", e.getMessage());
+//            }
 
         }
     }
@@ -305,7 +338,7 @@ public class UserCreatedCrawlActivity extends AppCompatActivity implements Adapt
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             SharedPreferences sharedPreferences =
-                    getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+                    getDefaultSharedPreferences(getApplicationContext());
             sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
                     .commit();
             LoginManager.getInstance().logOut();

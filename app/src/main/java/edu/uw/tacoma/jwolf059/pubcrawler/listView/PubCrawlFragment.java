@@ -39,8 +39,6 @@ public class PubCrawlFragment extends Fragment {
      */
     public PubCrawlFragment() {
     }
-
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static PubCrawlFragment newInstance(int columnCount) {
         PubCrawlFragment fragment = new PubCrawlFragment();

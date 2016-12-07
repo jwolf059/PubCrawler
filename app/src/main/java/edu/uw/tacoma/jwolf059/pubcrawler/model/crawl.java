@@ -53,8 +53,6 @@ public class Crawl implements Serializable {
 
         if(thePub != null) {
             mCrawlPath.add(thePub);
-        } else {
-            Log.i("Pub Object:", "null");
         }
 
     }
@@ -136,7 +134,7 @@ public class Crawl implements Serializable {
         sb.append(cleanSpace(theDestination));
         sb.append("'");
         sb.append(URL_2);
-        Log.i("URL: ", sb.toString());
+
         return sb.toString();
     }
 
@@ -222,7 +220,7 @@ public class Crawl implements Serializable {
         }
     }
 
-    private String cleanSpace(String theText) {
+    public String cleanSpace(String theText) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < theText.length(); i++) {
             if (theText.charAt(i) == 32) {

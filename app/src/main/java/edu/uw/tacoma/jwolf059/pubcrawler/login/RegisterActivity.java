@@ -32,6 +32,8 @@ import java.net.URL;
 import edu.uw.tacoma.jwolf059.pubcrawler.OptionScreens.PubCrawler_Main;
 import edu.uw.tacoma.jwolf059.pubcrawler.R;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 
 /**
  * An Activity to register new users.
@@ -213,7 +215,7 @@ public class RegisterActivity extends AppCompatActivity {
          */
         @Override
         protected void onPostExecute(String result) {
-            mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+            mSharedPreferences = getDefaultSharedPreferences(getApplicationContext());
             Log.e("Results: ", result);
             // Something wrong with the network or the URL.
             try {

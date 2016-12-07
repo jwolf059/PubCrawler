@@ -81,17 +81,13 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/white" />
 
-    <!--<TextView-->
-    <!--android:id="@+id/details_text_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content" />-->
-
     <Button
-        android:id="@+id/share_button"
+        android:id="@+id/share_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Share" />
+        android:text="Facebook Share"
+        android:textColor="@color/com_facebook_blue"
+        android:drawableLeft="@drawable/com_facebook_button_icon" />
 </LinearLayout>
 
 </ScrollView>

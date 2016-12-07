@@ -5,7 +5,6 @@
 */
 package edu.uw.tacoma.jwolf059.pubcrawler.login;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -36,6 +35,8 @@ import java.net.URL;
 
 import edu.uw.tacoma.jwolf059.pubcrawler.OptionScreens.PubCrawler_Main;
 import edu.uw.tacoma.jwolf059.pubcrawler.R;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 /**
  * The LoginActivity Activity will allows for the authetication of a single user. It provides each
@@ -70,12 +71,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        mSharedPreferences = getDefaultSharedPreferences(this);
 
         //Checks to see if the device has an active login.
         if (!mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
             setContentView(R.layout.activity_login);
-            final EditText userIdText = (EditText) findViewById(R.id.user_name);
+            final EditText userIdText = (EditText) findViewById(R.id.userid_edit);
             final EditText pwdText = (EditText) findViewById(R.id.password);
 
             //Creats the Facebook loginbutton
@@ -91,7 +92,6 @@ public class LoginActivity extends AppCompatActivity {
                             .commit();
                     Intent intent = new Intent(getApplicationContext(), PubCrawler_Main.class);
                     startActivity(intent);
-
 
                     finish();
                 }
@@ -286,8 +286,8 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject(result);
                 String status = (String) jsonObject.get("result");
                 if (status.equals("sucess")) {
-                    Toast.makeText(getApplicationContext(), "You have successfully Logged In"
-                            , Toast.LENGTH_LONG)
+                    Toast.makeText(getApplicationContext(), "Logged In"
+                            , Toast.LENGTH_SHORT)
                             .show();
                     //Adds active login boolean to the Shared Preferences.
                     mSharedPreferences
@@ -300,14 +300,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Incorrect Username or Password: "
+                    Toast.makeText(getApplicationContext(), "Incorrect Username or Password:"
                                     + jsonObject.get("error")
-                            , Toast.LENGTH_LONG)
+                            , Toast.LENGTH_SHORT)
                             .show();
                 }
             } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Please try again"
-                       , Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Incorrect Username or Password:"
+                       , Toast.LENGTH_SHORT).show();
                 Log.e("Wrong Data", e.getMessage());
             }
 

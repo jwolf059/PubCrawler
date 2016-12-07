@@ -32,10 +32,13 @@ import java.util.HashMap;
 import edu.uw.tacoma.jwolf059.pubcrawler.CrawlDetailsActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.details.PubDetails;
 import edu.uw.tacoma.jwolf059.pubcrawler.R;
+import edu.uw.tacoma.jwolf059.pubcrawler.details.PubDetailsFragment;
 import edu.uw.tacoma.jwolf059.pubcrawler.listView.PubCrawlFragment;
 import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Crawl;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
+
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 
 /**
@@ -133,15 +136,19 @@ public class PubCrawlMapActivity extends AppCompatActivity implements OnMapReady
     public void onInfoWindowClick(Marker marker) {
 
         Pub pub = mPubList.get(mPubMarkerMap.get(marker));
+        Bundle args = new Bundle();
+        args.putString("NAME", pub.getmName());
+        args.putBoolean("IS_OPEN", pub.getIsOpen());
+        args.putDouble("RATING", pub.getmRating());
+        args.putString("ID", pub.getmPlaceID());
 
-        Intent detail = new Intent(this, PubDetails.class);
 
-        detail.putExtra("Name", marker.getTitle());
-        detail.putExtra("RATING", pub.getmRating());
-        detail.putExtra("ISOPEN", pub.getIsOpen());
-        detail.putExtra("ID", pub.getmPlaceID());
-
-        startActivity(detail);
+        PubDetailsFragment detailsFragment = new PubDetailsFragment();
+        detailsFragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.crawl_map, detailsFragment, "DETAILS_FRAGMENT")
+                .addToBackStack(null)
+                .commit();
     }
 
     /**
@@ -153,7 +160,7 @@ public class PubCrawlMapActivity extends AppCompatActivity implements OnMapReady
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             SharedPreferences sharedPreferences =
-                    getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+                    getDefaultSharedPreferences(getApplicationContext());
             sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
                     .commit();
             LoginManager.getInstance().logOut();

@@ -22,15 +22,17 @@ import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Crawl;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class CrawlPageActivity extends AppCompatActivity {
 
     /** Constant value for accessing the Publist in a Bundle or extra*/
     public static final String PUB_LIST = "pub_list";
     /** Constant value for accessing the pubcount in a Bundle or extra*/
     public static final String PUB_COUNT = "pub_count";
-    //Crawl Object contains all pubs in crawl.
+    //Crawl Object contains all pubs in Crawl.
     private Crawl mCrawl;
-    //Array containing all pubs in crawl.
+    //Array containing all pubs in Crawl.
     private ArrayList<Pub> mPubList;
     //Current Pub Count
     private int mPubCount;
@@ -142,7 +144,7 @@ public class CrawlPageActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             SharedPreferences sharedPreferences =
-                    getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+                    getDefaultSharedPreferences(getApplicationContext());
             sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
                     .commit();
             LoginManager.getInstance().logOut();

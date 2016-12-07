@@ -19,6 +19,8 @@ import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.map.PubLocateActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.R;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class PubCrawler_Main extends AppCompatActivity {
 
     /** Facebook Callback Manager*/
@@ -28,6 +30,14 @@ public class PubCrawler_Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
+        SharedPreferences sharedPreferences =
+                getDefaultSharedPreferences(getApplicationContext());
+
+        if(!sharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
         setContentView(R.layout.activity_pub_crawler__main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -56,13 +66,13 @@ public class PubCrawler_Main extends AppCompatActivity {
     /**
      * If the Menu Item is selected Log the user out.
      * @param item the menu item selected
-     * @return boolean if action was ttaken.
+     * @return boolean if action was taken.
      */
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             SharedPreferences sharedPreferences =
-                    getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+                    getDefaultSharedPreferences(getApplicationContext());
             sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
                     .commit();
             LoginManager.getInstance().logOut();

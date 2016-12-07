@@ -25,6 +25,8 @@ import com.facebook.login.LoginManager;
 import edu.uw.tacoma.jwolf059.pubcrawler.R;
 import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 /**
  * The Crawler Activity will launch the create Crawl fragments.
  * @version 2 Nov 2016
@@ -77,7 +79,7 @@ public class CrawlActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             SharedPreferences sharedPreferences =
-                    getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+                    getDefaultSharedPreferences(getApplicationContext());
             sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
                     .commit();
             LoginManager.getInstance().logOut();

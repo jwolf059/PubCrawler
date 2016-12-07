@@ -25,14 +25,16 @@ import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Crawl;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 public class CrawlDetailsActivity extends AppCompatActivity implements PubCrawlFragment.OnListFragmentInteractionListener{
 
     /** Constant value for accessing the Publist in a Budle or extra*/
     public static final String PUB_LIST = "pub_list";
 
-    //Crawl Object contains all pubs in crawl.
+    //Crawl Object contains all pubs in Crawl.
     private Crawl mCrawl;
-    //Array containing all pubs in crawl.
+    //Array containing all pubs in Crawl.
     private ArrayList<Pub> mPubList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +74,14 @@ public class CrawlDetailsActivity extends AppCompatActivity implements PubCrawlF
 
     @Override
     public void onListFragmentInteraction(Pub thePub) {
+        Pub pub = thePub;
+        System.out.println(thePub.getmName());
         Bundle args = new Bundle();
-        args.putString("NAME", thePub.getmName());
-        args.putBoolean("IS_OPEN", thePub.getIsOpen());
-        args.putDouble("RATING", thePub.getmRating());
+        args.putString("NAME", pub.getmName());
+        args.putBoolean("IS_OPEN", pub.getIsOpen());
+        args.putDouble("RATING", pub.getmRating());
+        args.putString("ID", pub.getmPlaceID());
+
         PubDetailsFragment detailsFragment = new PubDetailsFragment();
         detailsFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
@@ -93,7 +99,7 @@ public class CrawlDetailsActivity extends AppCompatActivity implements PubCrawlF
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             SharedPreferences sharedPreferences =
-                    getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+                    getDefaultSharedPreferences(getApplicationContext());
             sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
                     .commit();
             LoginManager.getInstance().logOut();

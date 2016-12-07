@@ -68,26 +68,21 @@ public class Pub implements Serializable {
         isOpen = theOpen;
         mAddress = theAddress;
         mHasFood = theHasFood;
-
-
-
     }
 
-//    /**
-//     * OnClick listner for the
-//     */
-//    public interface OnClickPubListner {
-//        void onListFragmentInteraction(Pub pub);
-//    }
 
     /**
      * Parses the json string, returns an error message if unsuccessful.
      * Returns course list if success.
-     * @param pubJSON the JSON object returning from Google Places.
+     * @param theResult the result String returning from Google Places.
      * @return reason or null if successful.
      */
-    public static ArrayList<Pub> parsePubJSON(JSONArray pubJSON) {
+    public static ArrayList<Pub> parsePubJSON(String theResult) {
         ArrayList<Pub> pubList = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(theResult);
+            JSONArray pubJSON = jsonObject.getJSONArray("results");
+
         int len = pubJSON.length();
         if (pubJSON != null) {
             try {
@@ -135,6 +130,10 @@ public class Pub implements Serializable {
                 Log.e("ParsePubJSON: ", e.getMessage());
             }
 
+        }
+
+        } catch (Exception e) {
+            System.out.println("ParsePubJSON: " + e.getMessage());
         }
         return pubList;
     }

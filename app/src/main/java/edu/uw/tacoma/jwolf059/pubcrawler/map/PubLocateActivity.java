@@ -45,6 +45,8 @@ import edu.uw.tacoma.jwolf059.pubcrawler.R;
 import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 
 /**
  * The Findpub Activity will launch the map view and pub list fragments.
@@ -153,10 +155,6 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         args.putBoolean("IS_OPEN", pub.getIsOpen());
         args.putDouble("RATING", pub.getmRating());
         args.putString("ID", pub.getmPlaceID());
-//        args.putString("PICTURES", pub.getmName());
-//        args.putString("PHONE", pub.getmPhone());
-//        args.putString("ADDRESS", pub.getmName());
-//        args.putString("DETAILS", pub.getmName());
 
         PubDetailsFragment detailsFragment = new PubDetailsFragment();
         detailsFragment.setArguments(args);
@@ -222,23 +220,8 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         protected void onPostExecute(String result) {
 
             Log.i("json result ", result);
-
-            try {
-                Log.i("In post execute", "Boom");
-                JSONObject jsonObject = new JSONObject(result);
-                JSONArray jArray = jsonObject.getJSONArray("results");
-                int len = jArray.length();
-                Log.i("JSON Array Contents: ", "Length: " + len + " " + jArray.toString());
-
-                mPubList = Pub.parsePubJSON(jArray);
-                addMarkers();
-
-            } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Something wrong with the data" +
-                        e.getMessage(), Toast.LENGTH_LONG).show();
-                Log.e("Wrong Data", e.getMessage());
-            }
-
+            mPubList = Pub.parsePubJSON(result);
+            addMarkers();
         }
     }
 
@@ -251,7 +234,7 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             SharedPreferences sharedPreferences =
-                    getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+                    getDefaultSharedPreferences(getApplicationContext());
             sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
                     .commit();
             LoginManager.getInstance().logOut();

@@ -44,6 +44,8 @@ import edu.uw.tacoma.jwolf059.pubcrawler.map.PubCrawlMapActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Crawl;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 /**
  * The Random Crawler Activity will take the users input and create a random Crawl.
  * @version 21 Nov 2016
@@ -238,21 +240,8 @@ public class RandomCrawlActivity extends AppCompatActivity implements AdapterVie
 
             Log.i("json result ", result);
 
-            try {
-                JSONObject jsonObject = new JSONObject(result);
-                JSONArray jArray = jsonObject.getJSONArray("results");
-                int len = jArray.length();
-
-                mPubList = Pub.parsePubJSON(jArray);
+                mPubList = Pub.parsePubJSON(result);
                 createUI();
-
-
-            } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Something wrong with the data" +
-                        e.getMessage(), Toast.LENGTH_LONG).show();
-                Log.e("Wrong Data", e.getMessage());
-            }
-
         }
     }
 
@@ -265,7 +254,7 @@ public class RandomCrawlActivity extends AppCompatActivity implements AdapterVie
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             SharedPreferences sharedPreferences =
-                    getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+                    getDefaultSharedPreferences(getApplicationContext());
             sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
                     .commit();
             LoginManager.getInstance().logOut();

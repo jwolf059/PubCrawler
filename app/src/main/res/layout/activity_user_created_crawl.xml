@@ -39,8 +39,10 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="20dp"
+                android:textSize="20dp"
                 android:text="@string/create_crawl_title"
+                android:textStyle="bold"
                 android:textColor="@color/cardview_light_background" />
 
             <TextView

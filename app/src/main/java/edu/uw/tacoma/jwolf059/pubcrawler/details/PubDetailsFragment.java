@@ -1,8 +1,10 @@
 package edu.uw.tacoma.jwolf059.pubcrawler.details;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,10 +12,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +60,9 @@ public class PubDetailsFragment extends Fragment {
     private static TextView mAddress;
     private static TextView mPhone;
     private static TextView mHasFood;
+    public CallbackManager callbackManager;
+    public ShareDialog shareDialog;
+    private  String mWebsiteString;
 
 
     public PubDetailsFragment() {
@@ -63,6 +74,13 @@ public class PubDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pub_details, container, false);
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+
+
+
+
 
         mHours = (TextView) view.findViewById(R.id.hours_text_view);
         mWebsite = (TextView) view.findViewById(R.id.website_text_view);
@@ -93,6 +111,22 @@ public class PubDetailsFragment extends Fragment {
             openStatusView.setText("Closed");
         }
 
+
+        Button bt = (Button) view.findViewById(R.id.share_btn);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ShareDialog.canShow(ShareLinkContent.class)) {
+                    ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                            .setContentTitle("PubCrawler")
+                            .setContentDescription("Come join me at " + getArguments().getString("NAME")  + " for a pint of frothy awesomeness!")
+                            .setImageUrl(Uri.parse("https://students.washington.edu/jwolf059/beer.png"))
+                            .setContentUrl(Uri.parse(mWebsiteString)).build();
+                    shareDialog.show(linkContent);
+                }
+            }
+        });
+
         String url = buildDetailsURL();
         DetailTask detail = new DetailTask();
         detail.execute(url);
@@ -100,6 +134,14 @@ public class PubDetailsFragment extends Fragment {
         return view;
     }
 
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
 
     /**
      * Builds the URL using the Place ID. The URL will allow access to details for the given place.
@@ -200,7 +242,7 @@ public class PubDetailsFragment extends Fragment {
                 JSONObject bar = theObject.getJSONObject("result");
                 String address = bar.getString("formatted_address");
                 String phone = bar.getString("formatted_phone_number");
-                String website = bar.getString("website");
+                mWebsiteString = bar.getString("website");
                 JSONArray photos = bar.getJSONArray("photos");
                 JSONObject pic = photos.getJSONObject(0);
                 String photoReference = pic.getString("photo_reference");
@@ -217,7 +259,7 @@ public class PubDetailsFragment extends Fragment {
                 }
 
                 // Displays the information.
-                mWebsite.setText(website);
+                mWebsite.setText(mWebsiteString);
                 // Set the image.
                 new DownloadImageTask((ImageView) getActivity().findViewById(R.id.image_view))
                         .execute(URL_3 + mImage.getWidth() + "&photoreference=" + photoReference + URL_2);
@@ -265,6 +307,7 @@ public class PubDetailsFragment extends Fragment {
         }
 
         protected void onPostExecute(Bitmap result) {
+
             bmImage.setImageBitmap(result);
         }
     }
