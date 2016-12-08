@@ -219,7 +219,7 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
 
     /**
      * {@inheritDoc}
-     * Also adds detail information to the Activity's Extras and starts the PubDetails Activity.
+     * Also adds detail information to the Activity's Extras and starts the PubDetailsFragment.
      * @param marker
      */
     @Override

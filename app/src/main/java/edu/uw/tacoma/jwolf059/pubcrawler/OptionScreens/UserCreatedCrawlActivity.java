@@ -1,3 +1,8 @@
+/*
+* CrawlActivity - PubCrawler Applicaiton
+* TCSS450 - Fall 2016
+*
+*/
 package edu.uw.tacoma.jwolf059.pubcrawler.OptionScreens;
 
 import android.content.Context;
@@ -40,6 +45,13 @@ import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
+
+/**
+ * The user-created Crawler Activity. This will take the users input and create a custom Crawl.
+ * @version 21 Nov 2016
+ * @author Jeremy Wolf
+ *
+ */
 public class UserCreatedCrawlActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     /**
@@ -52,30 +64,39 @@ public class UserCreatedCrawlActivity extends AppCompatActivity implements Adapt
     public static final String URL_2 = "&keyword=brewery&name=bar&type=pub&radius=10000&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
     // List of Pubs
     private ArrayList<Pub> mPubList;
-
+    // The option spinner to choose the first pub.
     private Spinner mPubListSpinnerOne;
+    // The option spinner to choose the second pub.
     private Spinner mPubListSpinnerTwo;
+    // The option spinner to choose the third pub.
     private Spinner mPubListSpinnerThree;
+    // The option spinner to choose the fourth pub.
     private Spinner mPubListSpinnerFour;
+    // The option spinner to choose the fifth pub.
     private Spinner mPubListSpinnerFive;
+    // The option spinner to choose the sixth pub.
     private Spinner mPubListSpinnerSix;
 
 
-    private Spinner mStopNumber;
-
+    // The first/starting pub.
     private Pub mStartPub;
+    // The second pub.
     private Pub mSecondStop;
+    // The third pub.
     private Pub mThirdStop;
+    // The fourth pub.
     private Pub mFourthStop;
+    // The fifth pub.
     private Pub mFifthStop;
+    // The sixth pub.
     private Pub mSixthStop;
 
-    private int mNumberOfStops;
-
+    // The custom crawl.
     private Crawl mCrawl;
-
+    // The crawl name.
     private String mCrawlName;
 
+    /*{@inheritDoc} */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +148,10 @@ public class UserCreatedCrawlActivity extends AppCompatActivity implements Adapt
 
     }
 
+    /**
+     * Check to see if a search has already been done (Save data usage)
+     * @return
+     */
     public boolean searchCompleted() {
         //Check to see if a search has already been done (Save data usage)
         return false;
@@ -235,6 +260,9 @@ public class UserCreatedCrawlActivity extends AppCompatActivity implements Adapt
 
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
@@ -264,13 +292,14 @@ public class UserCreatedCrawlActivity extends AppCompatActivity implements Adapt
      */
     private class PubSearchTask extends AsyncTask<String, Void, String> {
 
-
+        /*{@inheritDoc} */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
-        @Override
+        /*{@inheritDoc} */
+         @Override
         protected String doInBackground(String... urls) {
             String response = "";
             HttpURLConnection urlConnection = null;
@@ -310,21 +339,8 @@ public class UserCreatedCrawlActivity extends AppCompatActivity implements Adapt
         protected void onPostExecute(String result) {
 
             Log.i("json result ", result);
-//
-//            try {
-//                JSONObject jsonObject = new JSONObject(result);
-//                JSONArray jArray = jsonObject.getJSONArray("results");
-//                int len = jArray.length();
-
-                mPubList = Pub.parsePubJSON(result);
-                createUI();
-
-
-//            } catch (JSONException e) {
-//                Toast.makeText(getApplicationContext(), "Something wrong with the data" +
-//                        e.getMessage(), Toast.LENGTH_LONG).show();
-//                Log.e("Wrong Data", e.getMessage());
-//            }
+            mPubList = Pub.parsePubJSON(result);
+            createUI();
 
         }
     }

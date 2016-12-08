@@ -1,3 +1,8 @@
+/*
+* CrawlActivity - PubCrawler Application
+* TCSS450 - Fall 2016
+*
+*/
 package edu.uw.tacoma.jwolf059.pubcrawler;
 
 import android.content.Context;
@@ -27,6 +32,11 @@ import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
+/**
+ * The details page of the crawl where user can get an overview of the pubs in the crawl.
+ * @version 7 Dec 2016
+ * @author Jeremy Wolf
+ */
 public class CrawlDetailsActivity extends AppCompatActivity implements PubCrawlFragment.OnListFragmentInteractionListener{
 
     /** Constant value for accessing the Publist in a Budle or extra*/
@@ -36,6 +46,10 @@ public class CrawlDetailsActivity extends AppCompatActivity implements PubCrawlF
     private Crawl mCrawl;
     //Array containing all pubs in Crawl.
     private ArrayList<Pub> mPubList;
+
+    /**
+     *{@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +87,9 @@ public class CrawlDetailsActivity extends AppCompatActivity implements PubCrawlF
         });
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void onListFragmentInteraction(Pub thePub) {
         Pub pub = thePub;

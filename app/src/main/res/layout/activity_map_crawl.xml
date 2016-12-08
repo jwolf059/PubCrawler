@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/amber"
     android:orientation="vertical"
-    tools:context="edu.uw.tacoma.jwolf059.pubcrawler.details.PubDetails">
+    tools:context="edu.uw.tacoma.jwolf059.pubcrawler.map.PubCrawlMapActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
