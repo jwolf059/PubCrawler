@@ -33,5 +33,6 @@
     <string name="pub_isOpen">PUB_IS_OPEN</string>
     <string name="pub_hours">PUB_HOURS</string>
     <string name="web_link"><a>www.google.com</a></string>
+    <string name="google_app_id">AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k</string>
 
 </resources>
