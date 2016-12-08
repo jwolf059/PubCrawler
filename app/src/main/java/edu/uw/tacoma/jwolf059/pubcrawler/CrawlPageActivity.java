@@ -1,3 +1,8 @@
+/*
+* CrawlActivity - PubCrawler Application
+* TCSS450 - Fall 2016
+*
+*/
 package edu.uw.tacoma.jwolf059.pubcrawler;
 
 import android.content.Context;
@@ -24,6 +29,12 @@ import edu.uw.tacoma.jwolf059.pubcrawler.model.Pub;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
+/**
+ * The pub page in the crawl where user can see all the information for the current pub and
+ * has the options to move the next or previous pub in the crawl.
+ * @version 7 Dec 2016
+ * @author Jeremy Wolf
+ */
 public class CrawlPageActivity extends AppCompatActivity {
 
     /** Constant value for accessing the Publist in a Bundle or extra*/
@@ -36,25 +47,36 @@ public class CrawlPageActivity extends AppCompatActivity {
     private ArrayList<Pub> mPubList;
     //Current Pub Count
     private int mPubCount;
+    /* The pub in the crawl. */
     private Pub mPub;
+    /* The text view for the pub's name. */
     private TextView mTitle;
+    /* The text view pub's opening status. */
     private TextView mIsOpen;
+    /* The text view for the pub's address. */
     private TextView mAddress;
+    /* The text view for the pub's rating. */
     private TextView mRate;
+    /* The text view for pub's food status. */
     private TextView mHasFood;
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crawl_page);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+
+        // find and save the references to the views
         mTitle = (TextView) findViewById(R.id.title_for_pub);
         mIsOpen = (TextView) findViewById(R.id.isopen_for_pub);;
         mAddress = (TextView) findViewById(R.id.address_for_pub);;
         mRate = (TextView) findViewById(R.id.rating_cur);
         mHasFood = (TextView) findViewById(R.id.isfood_avaiable);
-
+        // start the crawl with 0 pub
         mPubCount = 0;
 
         mCrawl = (Crawl) getIntent().getSerializableExtra(PUB_LIST);
@@ -123,6 +145,11 @@ public class CrawlPageActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Build the url string to request google navigation.
+     * @param thePub the pub which the user wants to navigate to.
+     * @return the url string to request google navigation.
+     */
     public String urlBuilder(Pub thePub) {
         StringBuilder sb = new StringBuilder();
         Double lat = thePub.getmLat();
@@ -157,6 +184,7 @@ public class CrawlPageActivity extends AppCompatActivity {
             return false;
         }
     }
+
     /**{@inheritDoc}
      *
      * @param menu the menu to be created

@@ -1,3 +1,8 @@
+/*
+* CrawlActivity - PubCrawler Applicaiton
+* TCSS450 - Fall 2016
+*
+*/
 package edu.uw.tacoma.jwolf059.pubcrawler.OptionScreens;
 
 import android.content.Context;
@@ -21,11 +26,20 @@ import edu.uw.tacoma.jwolf059.pubcrawler.R;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
+/**
+ * The main displays that the user will see after they login.
+ * (Random & User Selected)
+ * @version 21 November 2016
+ * @author Jeremy Wolf
+ */
 public class PubCrawler_Main extends AppCompatActivity {
 
     /** Facebook Callback Manager*/
     CallbackManager callbackManager;
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +58,9 @@ public class PubCrawler_Main extends AppCompatActivity {
         LoginManager.getInstance();
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -51,12 +68,20 @@ public class PubCrawler_Main extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Find the pubs in the given location.
+     * @param view a map view of the pubs in the area.
+     */
     public void findAPub(View view) {
         Intent intent = new Intent(this, PubLocateActivity.class);
         startActivity(intent);
 
     }
 
+    /**
+     * Create an crawl option page where users can choose the options for their crawl.
+     * @param view the view with the crawl options.
+     */
     public void crawlPage(View view) {
         Intent intent = new Intent(this, CrawlActivity.class);
         startActivity(intent);

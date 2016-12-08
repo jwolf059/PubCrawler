@@ -31,7 +31,9 @@ public class CrawlTypeFragment extends Fragment {
         // Required empty public constructor
     }
 
-
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

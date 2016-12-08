@@ -35,12 +35,11 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
  */
 public class CrawlActivity extends AppCompatActivity {
 
-
     /**
      * Creates the Crawl Activity.
      * @param savedInstanceState the bundle containig the savedInstance data.
+     *{@inheritDoc}
      */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
