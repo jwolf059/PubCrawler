@@ -1,3 +1,8 @@
+/*
+* CrawlActivity - PubCrawler Application
+* TCSS450 - Fall 2016
+*
+*/
 package edu.uw.tacoma.jwolf059.pubcrawler.data;
 
 import android.content.ContentValues;
@@ -11,16 +16,21 @@ import edu.uw.tacoma.jwolf059.pubcrawler.R;
 /**
  * The SQLite database class to save pubs in the crawl that
  * the user created or was randomly created.
+ * @author Thang Nguyen
+ * @version 12/7/16
  */
-
 public class CrawlDB {
 
-    public static final int DB_VERSION = 1;
-    public static final String DB_NAME = "Crawl.db";
-
+    /* The database version. */
+    private static final int DB_VERSION = 1;
+    /* The database name. */
+    private static final String DB_NAME = "Crawl.db";
+    /* The SQLiteOpenHelper. */
     private CrawlDBHelper mCrawlDBHelper;
+    /* The SQLite Database. */
     private SQLiteDatabase mSQLiteDatabase;
 
+    /** Constructor for the CrawDB. */
     public CrawlDB(Context context) {
         mCrawlDBHelper = new CrawlDBHelper(
                 context, DB_NAME, null, DB_VERSION);
@@ -59,7 +69,7 @@ public class CrawlDB {
     }
 
     /**
-     * Delete all the data from the CRAWL_TABLE
+     * Delete all the data from the Crawl database.
      */
     public void updateCrawl() {
         mCrawlDBHelper.onUpgrade(mSQLiteDatabase, 1, 1);
@@ -67,15 +77,16 @@ public class CrawlDB {
 
 
 
-
+    /* The helper class for help with creating and adding the pubs to the database. */
     class CrawlDBHelper extends SQLiteOpenHelper {
 
+        /* The SQL query to create the table. */
         private final String CREATE_CRAWL_SQL;
-
+        /* The SQL query to drop the table. */
         private final String DROP_CRAWL_SQL;
 
 
-
+        /** Constructor the the SQLiteOpenHelper. */
         public CrawlDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);
             CREATE_CRAWL_SQL = context.getString(R.string.CREATE_CRAWL_SQL);
@@ -83,11 +94,17 @@ public class CrawlDB {
 
         }
 
+        /**
+         *{@inheritDoc}
+         */
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
             sqLiteDatabase.execSQL(CREATE_CRAWL_SQL);
         }
 
+        /**
+         *{@inheritDoc}
+         */
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
             sqLiteDatabase.execSQL(DROP_CRAWL_SQL);

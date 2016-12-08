@@ -67,21 +67,24 @@ public class RandomCrawlActivity extends AppCompatActivity implements AdapterVie
     public static final String URL_2 = "&keyword=brewery&name=bar&type=pub&radius=10000&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
     // List of Pubs
     private ArrayList<Pub> mPubList;
-
+    // The option spinner to choose the starting pub from.
     private Spinner mPubListSpinner;
-
+    // The option spinner to choose the last pub from.
     private Spinner mStopNumber;
-
+    // The starting pub.
     private Pub mStartPub;
-
+    // The number of stop in the crawl.
     private int mNumberOfStops;
-
+    // The random crawl.
     private Crawl mCrawl;
-
+    // The crawl's name.
     private String mCrawlName;
-
+    // Whether or not the user wants food.
     private Boolean wantFood = false;
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +165,9 @@ public class RandomCrawlActivity extends AppCompatActivity implements AdapterVie
 
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -176,12 +182,18 @@ public class RandomCrawlActivity extends AppCompatActivity implements AdapterVie
 
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
 
-
+    /**
+     * Check to see if a search has already been done (Save data usage)
+     * @return
+     */
     public boolean searchCompleted() {
         //Check to see if a search has already been done (Save data usage)
         return false;
@@ -212,12 +224,13 @@ public class RandomCrawlActivity extends AppCompatActivity implements AdapterVie
      */
     private class PubSearchTask extends AsyncTask<String, Void, String> {
 
-
+        /*{@inheritDoc} */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
+        /*{@inheritDoc} */
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
