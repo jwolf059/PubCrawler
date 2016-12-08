@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="CREATE_CRAWL_SQL">
+        CREATE TABLE IF NOT EXISTS Crawl
+        (address TEXT PRIMARY KEY,
+        name TEXT,
+        latitude DOUBLE,
+        longitude DOUBLE,
+        rating DOUBLE,
+        hasFood TEXT)
+    </string>
+
+    <string name="DROP_CRAWL_SQL">
+        DROP TABLE IF EXISTS Crawl
+    </string>
+
+</resources>

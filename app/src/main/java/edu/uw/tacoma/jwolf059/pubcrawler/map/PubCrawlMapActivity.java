@@ -28,10 +28,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import edu.uw.tacoma.jwolf059.pubcrawler.CrawlDetailsActivity;
-import edu.uw.tacoma.jwolf059.pubcrawler.details.PubDetails;
 import edu.uw.tacoma.jwolf059.pubcrawler.R;
+import edu.uw.tacoma.jwolf059.pubcrawler.data.CrawlDB;
 import edu.uw.tacoma.jwolf059.pubcrawler.details.PubDetailsFragment;
 import edu.uw.tacoma.jwolf059.pubcrawler.listView.PubCrawlFragment;
 import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
@@ -58,7 +59,8 @@ public class PubCrawlMapActivity extends AppCompatActivity implements OnMapReady
     private Crawl mCrawl;
     // Map used to store the Marker Object and the Index of the referenced pub object.
     private HashMap<Marker, Integer> mPubMarkerMap = new HashMap<>();
-
+    // Store the pubs in the crawl that the user created or was randomly created.
+    private CrawlDB mCrawlDB;
 
     /**
      * Creates the findpub Activity.
@@ -70,7 +72,19 @@ public class PubCrawlMapActivity extends AppCompatActivity implements OnMapReady
 
         setContentView(R.layout.activity_map_crawl);
         mCrawl = (Crawl) getIntent().getSerializableExtra("object");
-        System.out.println("Name: " + mCrawl.getmName());
+
+        // Create the Crawl SQLite database (if empty) to store the pubs in the crawl.
+        if (mCrawlDB == null) {
+            mCrawlDB = new CrawlDB(this);
+        }
+
+        // Add the pubs into the table.
+        List<Pub> pubs = mCrawl.getmCrawlPath();
+        for (Pub p: pubs) {
+            mCrawlDB.insertPub(p.getmAddress(), p.getmName(), p.getmLat(),
+                    p.getmLng(), p.getmRating(), p.getmHasFood());
+        }
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -131,7 +145,7 @@ public class PubCrawlMapActivity extends AppCompatActivity implements OnMapReady
 
     /**
      * {@inheritDoc}
-     * Also adds detail information to the Activity's Extras and starts the PubDetails Activity.
+     * Also adds detail information to the Activity's Extras and starts the PubDetailsFragment.
      * @param marker
      */
     @Override

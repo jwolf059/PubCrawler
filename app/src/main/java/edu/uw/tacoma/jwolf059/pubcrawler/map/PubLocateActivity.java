@@ -5,11 +5,16 @@
  */
 package edu.uw.tacoma.jwolf059.pubcrawler.map;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,6 +24,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,6 +50,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import edu.uw.tacoma.jwolf059.pubcrawler.details.PubDetailsFragment;
 import edu.uw.tacoma.jwolf059.pubcrawler.R;
@@ -54,7 +66,33 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
  * @author Jeremy Wolf
  *
  */
-public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCallback,
+        GoogleMap.OnInfoWindowClickListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+
+    /* Constant to use with the permission. */
+    private static final int MY_PERMISSIONS_LOCATIONS = 0;
+
+    /* A Google Api Client to use Google services. */
+    private GoogleApiClient mGoogleApiClient;
+
+    private static final String TAG = "LocationsActivity";
+
+    /** The desired interval for location updates. Inexact. Updates may be more or less frequent. */
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
+
+    /**
+     * The fastest rate for active location updates. Exact. Updates will never be more frequent
+     * than this value.
+     */
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+
+    /** The location request with configured properties details. */
+    private LocationRequest mLocationRequest;
+
+    /** The current location. */
+    private Location mCurrentLocation;
 
     public static final String URL_0 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=47.253361,-122.439191&keyword=brewery&name=bar&type=pub&radius=10000&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
 
@@ -64,6 +102,8 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
     public static final String URL_2 = "&keyword=brewery&name=bar&type=pub&radius=10000&key=AIzaSyCEn4Fhg1PNkBk30X-tffOtNzTiPZCh58k";
     // the GoogleMap oject used for displaying locaiton and pubs.
     private GoogleMap mMap;
+    /* The Support Map Fragment. */
+    private SupportMapFragment mMapFragment;
     // ArrayList of Pub object created using returned JSON Object.
     private ArrayList<Pub> mPubList;
     // Map used to store the Marker Object and the Index of the referenced pub object.
@@ -80,24 +120,46 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         setContentView(R.layout.activity_pub_locator);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        SupportMapFragment mapFragment = new SupportMapFragment();
+
+        // Check if we have permissions to access location.
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
+                            , Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_LOCATIONS);
 
 
-        LoginTask task = new LoginTask();
-        String url = buildPubSearchURL();
+        }
+
+        mLocationRequest = new LocationRequest();
+
+        // Sets the desired interval for active location updates. This interval is
+        // inexact. You may not receive updates at all if no location sources are available, or
+        // you may receive them slower than requested. You may also receive updates faster than
+        // requested if other applications are requesting location at a faster interval.
+        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+
+        // Sets the fastest rate for active location updates. This interval is exact, and your
+        // application will never receive updates faster than this value.
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        mMapFragment = new SupportMapFragment();
+
         try {
-            mapFragment.getMapAsync(this);
-            String result = task.execute(url).get();
-
-
-
+            mMapFragment.getMapAsync(this);
         } catch (Exception e) {
             Log.e("PubLocate" , e.getMessage());
         }
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fragment_container_locator, mapFragment)
+                .add(R.id.fragment_container_locator, mMapFragment)
                 .commit();
     }
 
@@ -109,13 +171,16 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Tacoma, and move the camera.
-        // Ken this is the hard coded location that we need to update using the device locaiton.
-        LatLng currentLocaiton = new LatLng(47.253361, -122.439191);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocaiton));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocaiton, 11f));
-        mMap.setOnInfoWindowClickListener(this);
-        addMarkers();
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .addApi(AppIndex.API).build();
+        }
+
+        mGoogleApiClient.connect();
     }
 
     /**
@@ -140,14 +205,15 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
      * @return String that contains the URL to include current locaiton.
      */
     public String buildPubSearchURL() {
-        // Ken, Need to be able to get the Longitute and Latitude from a member variable.
 
         StringBuilder sb = new StringBuilder();
         sb.append(URL);
-        //This will be the actaul device locaiton
-        sb.append("47.253361,-122.439191");
+        sb.append(String.valueOf(mCurrentLocation.getLatitude()));
+        sb.append(",");
+        sb.append(String.valueOf(mCurrentLocation.getLongitude()));
         sb.append(URL_2);
 
+        Log.i("The search URL - Thang", sb.toString());
         return sb.toString();
     }
 
@@ -184,6 +250,164 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
         mPubList = (ArrayList<Pub>) thePubList;
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_LOCATIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // locations-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this, "Locations need to be working for this portion, please provide permission"
+                            , Toast.LENGTH_SHORT)
+                            .show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    /**
+     * Requests location updates from the FusedLocationApi.
+     */
+    protected void startLocationUpdates() {
+        // The final argument to {@code requestLocationUpdates()} is a LocationListener
+        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
+    /**
+     * Removes location updates from the FusedLocationApi.
+     */
+    protected void stopLocationUpdates() {
+        // It is a good practice to remove location requests when the activity is in a paused or
+        // stopped state. Doing so helps battery performance and is especially
+        // recommended in applications that request frequent location updates.
+
+        // The final argument to {@code requestLocationUpdates()} is a LocationListener
+        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopLocationUpdates();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+            mGoogleApiClient.disconnect();
+    }
+
+    protected void onStart() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+        super.onStart();
+    }
+
+    protected void onStop() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onStop();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        // If the initial location was never previously requested, we use
+        // FusedLocationApi.getLastLocation() to get it. If it was previously requested, we store
+        // its value in the Bundle and check for it in onCreate(). We
+        // do not request it again unless the user specifically requests location updates by pressing
+        // the Start Updates button.
+        //
+        // Because we cache the value of the initial location in the Bundle, it means that if the
+        // user launches the activity,
+        // moves to a new location, and then changes the device orientation, the original location
+        // is displayed as the activity is re-created.
+        if (mCurrentLocation == null) {
+
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                if (mCurrentLocation != null)
+                    Log.i(TAG, mCurrentLocation.toString());
+
+                startLocationUpdates();
+            }
+        }
+
+        LoginTask task = new LoginTask();
+        String url = buildPubSearchURL();
+        try {
+            String result = task.execute(url).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
+        // Add a marker, and move the camera.
+        LatLng currentLocation = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 11f));
+        mMap.setOnInfoWindowClickListener(this);
+
+    }
+
+    /**
+     * Callback that fires when the location changes.
+     */
+    @Override
+    public void onLocationChanged(Location location) {
+        mCurrentLocation = location;
+        Log.d(TAG, mCurrentLocation.toString());
+        mMapFragment.newInstance();
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        // The connection to Google Play services was lost for some reason. We call connect() to
+        // attempt to re-establish the connection.
+        Log.i(TAG, "Connection suspended");
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        // Refer to the javadoc for ConnectionResult to see what error codes                    might be returned in
+        // onConnectionFailed.
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+    }
+
+    /**
+     * Return the current location.
+     * @return the current location.
+     */
+    public Location getCurrentLocation() {
+        return mCurrentLocation;
+    }
 
     //NEED this
     private class LoginTask extends AsyncTask<String, Void, String> {
@@ -233,6 +457,7 @@ public class PubLocateActivity extends AppCompatActivity implements OnMapReadyCa
 
         Log.i("json result ", result);
         mPubList = Pub.parsePubJSON(result);
+        addMarkers();
 
         }
     }
