@@ -38,8 +38,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.uw.tacoma.jwolf059.pubcrawler.R;
+import edu.uw.tacoma.jwolf059.pubcrawler.data.CrawlDB;
 import edu.uw.tacoma.jwolf059.pubcrawler.login.LoginActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.map.PubCrawlMapActivity;
 import edu.uw.tacoma.jwolf059.pubcrawler.model.Crawl;
